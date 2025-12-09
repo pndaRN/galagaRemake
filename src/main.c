@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 const int SCREEN_WIDTH = 800;
-const int SCREEN_HIGHT = 600;
+const int SCREEN_HEIGHT = 600;
 
 int main(int argc, char *argv[]) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 
   SDL_Window *window =
       SDL_CreateWindow("Galaga", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                       SCREEN_WIDTH, SCREEN_HIGHT, SDL_WINDOW_SHOWN);
+                       SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
   if (window == NULL) {
     printf("Window could not be created. SDL_Error: %s\n", SDL_GetError());
