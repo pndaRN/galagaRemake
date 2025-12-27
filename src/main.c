@@ -6,8 +6,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
+const int SCREEN_WIDTH = 1280;
+const int SCREEN_HEIGHT = 720;
 
 int main(int argc, char *argv[]) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -30,6 +30,8 @@ int main(int argc, char *argv[]) {
 
   bool running = true;
   SDL_Event event;
+
+  // GAME LOOP
 
   while (running) {
     while (SDL_PollEvent(&event)) {
