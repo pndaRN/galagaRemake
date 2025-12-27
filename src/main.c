@@ -1,3 +1,4 @@
+#include "player.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_events.h>
@@ -31,6 +32,7 @@ int main(int argc, char *argv[]) {
   bool running = true;
   SDL_Event event;
 
+  Player player = player_create(SCREEN_WIDTH, SCREEN_HEIGHT);
   // GAME LOOP
 
   while (running) {

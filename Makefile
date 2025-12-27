@@ -1,8 +1,8 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -g
+CFLAGS = -Wall -Wextra -g -Isrc
 LDFLAGS = -lSDL2
 
-SRC = src/main.c
+SRC = src/main.c src/player.c
 OUT = game
 
 all:
