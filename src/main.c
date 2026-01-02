@@ -1,4 +1,5 @@
 #include "player.h"
+#include "bullet.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_events.h>
@@ -9,6 +10,7 @@
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
+const int MAX_BULLETS = 50;
 
 int main(int argc, char *argv[]) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -34,6 +36,11 @@ int main(int argc, char *argv[]) {
 
   Player player = player_create(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+  Bullet bullets[MAX_BULLETS];
+  for (int i = 0; i < MAX_BULLETS; i++) {
+    bullets[i].active = false;
+  }
+
   Uint64 lastTime = SDL_GetTicks64();
   float deltaTime = 0.0f;
   
@@ -57,11 +64,24 @@ int main(int argc, char *argv[]) {
       if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
         running = false;
       }
+      if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
+        for (int i = 0; i < MAX_BULLETS; i++) {
+          if (!bullets[i].active) {
+            bullets[i] = bullet_init(&player);
+            break;
+          }
+        }
+      }
     }
 
     const Uint8 *keystate = SDL_GetKeyboardState(NULL);
 
     player_update(&player, keystate, deltaTime, SCREEN_WIDTH);
+    for (int i = 0; i < MAX_BULLETS; i++) {
+      if (bullets[i].active) {
+        bullet_update(&bullets[i], deltaTime);
+      }
+    }
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -76,9 +96,20 @@ int main(int argc, char *argv[]) {
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     SDL_RenderFillRect(renderer, &playerRect);
 
+    for (int i = 0; i < MAX_BULLETS; i++) {
+      if (bullets[i].active) {
+        SDL_Rect bulletRect = {
+          (int)bullets[i].x,
+          (int)bullets[i].y,
+          bullets[i].width,
+          bullets[i].height
+        };
+        SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+        SDL_RenderFillRect(renderer, &bulletRect);
+      }
+    }
     SDL_RenderPresent(renderer);
   }
-
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
   SDL_Quit();
