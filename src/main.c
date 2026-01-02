@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
 
     const Uint8 *keystate = SDL_GetKeyboardState(NULL);
 
-    player_update(&player, keystate, deltaTime, SCREEN_WIDTH)
+    player_update(&player, keystate, deltaTime, SCREEN_WIDTH);
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
