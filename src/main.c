@@ -34,11 +34,17 @@ int main(int argc, char *argv[]) {
 
   Player player = player_create(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-  
+  Uint64 lastTime = SDL_GetTicks64();
+  float deltaTime = 0.0f;
   
   // GAME LOOP
 
   while (running) {
+
+    Uint64 currentTime = SDL_GetTicks64();
+    deltaTime = (currentTime - lastTime) / 1000.0f;
+    lastTime = currentTime;
+
     while (SDL_PollEvent(&event)) {
       printf("Event: %d\n", event.type);
       if (event.type == SDL_QUIT) {
@@ -51,6 +57,22 @@ int main(int argc, char *argv[]) {
       if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
         running = false;
       }
+    }
+
+    const Uint8 *keystate = SDL_GetKeyboardState(NULL);
+
+    if (keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A]) {
+      player.x -= player.speed * deltaTime;
+    }
+    if (keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D]) {
+      player.x += player.speed * deltaTime;
+    }
+
+    if (player.x < 0) {
+      player.x = 0;
+    }
+    if (player.x + player.width > SCREEN_WIDTH) {
+      player.x = SCREEN_WIDTH - player.width;
     }
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
