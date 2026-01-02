@@ -33,6 +33,9 @@ int main(int argc, char *argv[]) {
   SDL_Event event;
 
   Player player = player_create(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+  
+  
   // GAME LOOP
 
   while (running) {
@@ -52,6 +55,17 @@ int main(int argc, char *argv[]) {
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
+
+    SDL_Rect playerRect = {
+      (int)player.x,
+      (int)player.y,
+      player.width,
+      player.height
+    };
+
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    SDL_RenderFillRect(renderer, &playerRect);
+
     SDL_RenderPresent(renderer);
   }
 
