@@ -61,19 +61,7 @@ int main(int argc, char *argv[]) {
 
     const Uint8 *keystate = SDL_GetKeyboardState(NULL);
 
-    if (keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A]) {
-      player.x -= player.speed * deltaTime;
-    }
-    if (keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D]) {
-      player.x += player.speed * deltaTime;
-    }
-
-    if (player.x < 0) {
-      player.x = 0;
-    }
-    if (player.x + player.width > SCREEN_WIDTH) {
-      player.x = SCREEN_WIDTH - player.width;
-    }
+    player_update(&player, keystate, deltaTime, SCREEN_WIDTH)
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
