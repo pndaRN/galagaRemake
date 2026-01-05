@@ -16,7 +16,7 @@ Bullet bullet_init(Player *player) {
 }
 
 void bullet_update(Bullet *b, float deltaTime) {
-    b->y -= b.speed * deltaTime;
+    b->y -= b->speed * deltaTime;
     if (b->y + b->height < 0) {
         b->active = false;
     } 

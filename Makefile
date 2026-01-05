@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -g -Isrc
 LDFLAGS = -lSDL2
 
-SRC = src/main.c src/player.c
+SRC = src/main.c src/player.c src/bullet.c
 OUT = game
 
 all:
