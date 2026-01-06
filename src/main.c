@@ -1,5 +1,6 @@
 #include "player.h"
 #include "bullet.h"
+#include "enemy.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_events.h>
@@ -7,10 +8,12 @@
 #include <SDL2/SDL_video.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <time.h>
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
 const int MAX_BULLETS = 50;
+const int MAX_ENEMIES = 20;
 
 int main(int argc, char *argv[]) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -34,6 +37,8 @@ int main(int argc, char *argv[]) {
   bool running = true;
   SDL_Event event;
 
+  srand(time(NULL));
+
   Player player = player_create(SCREEN_WIDTH, SCREEN_HEIGHT);
 
   Bullet bullets[MAX_BULLETS];
@@ -41,8 +46,15 @@ int main(int argc, char *argv[]) {
     bullets[i].active = false;
   }
 
+  Enemy enemies[MAX_ENEMIES];
+  for (int i = 0; i < MAX_ENEMIES; i++) {
+    enemies[i].active = false;
+  }
+
   Uint64 lastTime = SDL_GetTicks64();
   float deltaTime = 0.0f;
+
+  
   
   // GAME LOOP
 
@@ -72,6 +84,14 @@ int main(int argc, char *argv[]) {
           }
         }
       }
+      if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_e) {
+        for (int i = 0; i < MAX_ENEMIES; i++) {
+          if (!enemies[i].active) {
+            enemies[i] = enemy_init(SCREEN_WIDTH, SCREEN_HEIGHT);
+            break;
+          }
+        }
+      }
     }
 
     const Uint8 *keystate = SDL_GetKeyboardState(NULL);
@@ -80,6 +100,12 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < MAX_BULLETS; i++) {
       if (bullets[i].active) {
         bullet_update(&bullets[i], deltaTime);
+      }
+    }
+
+    for (int i = 0; i < MAX_ENEMIES; i++) {
+      if (enemies[i].active) {
+        enemy_update(&enemies[i], deltaTime, SCREEN_HEIGHT);
       }
     }
 
@@ -108,6 +134,20 @@ int main(int argc, char *argv[]) {
         SDL_RenderFillRect(renderer, &bulletRect);
       }
     }
+
+    for (int i = 0; i < MAX_ENEMIES; i++) {
+      if (enemies[i].active) {
+        SDL_Rect enemyRect = {
+          (int)enemies[i].x,
+          (int)enemies[i].y,  
+          enemies[i].width,
+          enemies[i].height
+        };
+        SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
+        SDL_RenderFillRect(renderer,&enemyRect);
+      }
+    }
+
     SDL_RenderPresent(renderer);
   }
   SDL_DestroyRenderer(renderer);
