@@ -1,6 +1,8 @@
 #include "player.h"
 #include "bullet.h"
 #include "enemy.h"
+#include "collision.h"
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_events.h>
@@ -109,6 +111,20 @@ int main(int argc, char *argv[]) {
       }
     }
 
+    for (int i = 0; i < MAX_BULLETS; i++) {
+      if (bullets[i].active) {
+        for (int j = 0; j < MAX_ENEMIES; j++){
+          if (enemies[j].active) {
+            if(check_collision(bullets[i].x, bullets[i].y, bullet[i].width, bullet[i].height,
+                            enemies[j].x, enemies[j].y, enemies[j].width, enemies[j].height)) {
+                              bullets[i].active = false;
+                              enemies[j].active = false;
+                              break;
+                            }
+          }
+        }
+      }
+    }
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
