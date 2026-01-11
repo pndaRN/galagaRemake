@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
       if (bullets[i].active) {
         for (int j = 0; j < MAX_ENEMIES; j++){
           if (enemies[j].active) {
-            if(check_collision(bullets[i].x, bullets[i].y, bullet[i].width, bullet[i].height,
+            if(check_collision(bullets[i].x, bullets[i].y, bullets[i].width, bullets[i].height,
                             enemies[j].x, enemies[j].y, enemies[j].width, enemies[j].height)) {
                               bullets[i].active = false;
                               enemies[j].active = false;

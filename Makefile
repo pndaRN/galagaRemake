@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -g -Isrc
 LDFLAGS = -lSDL2
 
-SRC = src/main.c src/player.c src/bullet.c src/enemy.c
+SRC = src/main.c src/player.c src/bullet.c src/enemy.c src/collision.c
 OUT = game
 
 all:
