@@ -1,11 +1,12 @@
-#include "player.h"
 #include "bullet.h"
-#include "enemy.h"
 #include "collision.h"
+#include "enemy.h"
+#include "player.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_rect.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 #include <stdbool.h>
@@ -43,6 +44,13 @@ int main(int argc, char *argv[]) {
 
   Player player = player_create(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+  SDL_FPoint test_path[] = {
+      {640, -50},
+      {960, 200},
+      {640, 400},
+      {640, 200},
+  };
+
   Bullet bullets[MAX_BULLETS];
   for (int i = 0; i < MAX_BULLETS; i++) {
     bullets[i].active = false;
@@ -56,8 +64,6 @@ int main(int argc, char *argv[]) {
   Uint64 lastTime = SDL_GetTicks64();
   float deltaTime = 0.0f;
 
-  
-  
   // GAME LOOP
 
   while (running) {
@@ -89,7 +95,7 @@ int main(int argc, char *argv[]) {
       if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_e) {
         for (int i = 0; i < MAX_ENEMIES; i++) {
           if (!enemies[i].active) {
-            enemies[i] = enemy_init(SCREEN_WIDTH, SCREEN_HEIGHT);
+            enemies[i] = enemy_init(test_path, 4, 400.0f);
             break;
           }
         }
@@ -113,14 +119,15 @@ int main(int argc, char *argv[]) {
 
     for (int i = 0; i < MAX_BULLETS; i++) {
       if (bullets[i].active) {
-        for (int j = 0; j < MAX_ENEMIES; j++){
+        for (int j = 0; j < MAX_ENEMIES; j++) {
           if (enemies[j].active) {
-            if(check_collision(bullets[i].x, bullets[i].y, bullets[i].width, bullets[i].height,
-                            enemies[j].x, enemies[j].y, enemies[j].width, enemies[j].height)) {
-                              bullets[i].active = false;
-                              enemies[j].active = false;
-                              break;
-                            }
+            if (check_collision(bullets[i].x, bullets[i].y, bullets[i].width,
+                                bullets[i].height, enemies[j].x, enemies[j].y,
+                                enemies[j].width, enemies[j].height)) {
+              bullets[i].active = false;
+              enemies[j].active = false;
+              break;
+            }
           }
         }
       }
@@ -128,24 +135,16 @@ int main(int argc, char *argv[]) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    SDL_Rect playerRect = {
-      (int)player.x,
-      (int)player.y,
-      player.width,
-      player.height
-    };
+    SDL_Rect playerRect = {(int)player.x, (int)player.y, player.width,
+                           player.height};
 
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     SDL_RenderFillRect(renderer, &playerRect);
 
     for (int i = 0; i < MAX_BULLETS; i++) {
       if (bullets[i].active) {
-        SDL_Rect bulletRect = {
-          (int)bullets[i].x,
-          (int)bullets[i].y,
-          bullets[i].width,
-          bullets[i].height
-        };
+        SDL_Rect bulletRect = {(int)bullets[i].x, (int)bullets[i].y,
+                               bullets[i].width, bullets[i].height};
         SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
         SDL_RenderFillRect(renderer, &bulletRect);
       }
@@ -153,14 +152,10 @@ int main(int argc, char *argv[]) {
 
     for (int i = 0; i < MAX_ENEMIES; i++) {
       if (enemies[i].active) {
-        SDL_Rect enemyRect = {
-          (int)enemies[i].x,
-          (int)enemies[i].y,  
-          enemies[i].width,
-          enemies[i].height
-        };
+        SDL_Rect enemyRect = {(int)enemies[i].x, (int)enemies[i].y,
+                              enemies[i].width, enemies[i].height};
         SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
-        SDL_RenderFillRect(renderer,&enemyRect);
+        SDL_RenderFillRect(renderer, &enemyRect);
       }
     }
 

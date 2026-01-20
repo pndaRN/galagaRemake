@@ -2,6 +2,7 @@
 #define ENEMY_H
 
 #include <SDL2/SDL.h>
+#include <math.h>
 #include <stdbool.h>
 
 typedef enum {
@@ -19,12 +20,10 @@ typedef struct {
   int currentWaypoint;
   SDL_FPoint path[10];
   int pathLength;
-} Enemy ;
+} Enemy;
 
-
-Enemy enemy_init(int screen_width, int screen_height);
+Enemy enemy_init(SDL_FPoint *path, int pathLength, float speed);
 
 void enemy_update(Enemy *e, float deltaTime, int screen_height);
 
 #endif
-
