@@ -2,6 +2,7 @@
 #define ENEMY_H
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_rect.h>
 #include <math.h>
 #include <stdbool.h>
 
@@ -17,12 +18,14 @@ typedef struct {
   int width, height;
   bool active;
   EnemyState state;
-  int currentWaypoint;
-  SDL_FPoint path[10];
-  int pathLength;
+
+  SDL_FPoint control_points[4];
+  float t;
+
 } Enemy;
 
-Enemy enemy_init(SDL_FPoint *path, int pathLength, float speed);
+Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3,
+                 float speed);
 
 void enemy_update(Enemy *e, float deltaTime, int screen_height);
 

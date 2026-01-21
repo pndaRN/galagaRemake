@@ -1,13 +1,12 @@
 #include "enemy.h"
+#include "math_utils.h"
+
 #include <SDL2/SDL_rect.h>
 #include <math.h>
 // #include <stdlib.h>
 
-Enemy enemy_init(SDL_FPoint *path, int pathLength, float speed) {
-  printf("Path received:\n");
-  for (int i = 0; i < pathLength; i++) {
-    printf("  path[%d] = (%.1f, %.1f)\n", i, path[i].x, path[i].y);
-  }
+Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3,
+                 float speed) {
   Enemy e;
 
   e.width = 50;
@@ -16,17 +15,15 @@ Enemy enemy_init(SDL_FPoint *path, int pathLength, float speed) {
   e.active = true;
 
   e.state = ENEMY_ENTERING;
-  e.currentWaypoint = 1;
 
-  e.pathLength = pathLength;
-  for (int i = 0; i < pathLength; i++) {
-    e.path[i] = path[i];
-  }
+  e.control_points[0] = p0;
+  e.control_points[1] = p1;
+  e.control_points[2] = p2;
+  e.control_points[3] = p3;
 
-  e.x = path[0].x;
-  e.y = path[0].y;
-
-  printf("Enemy initialized at (%.1f, %.1f)\n", e.x, e.y);
+  e.t = 0.0f;
+  e.x = p0.x;
+  e.y = p0.y;
 
   return e;
 }
@@ -37,33 +34,29 @@ void enemy_update(Enemy *e, float deltaTime, int screen_height) {
 
   switch (e->state) {
   case ENEMY_ENTERING: {
-    SDL_FPoint target = e->path[e->currentWaypoint];
 
-    float dx = target.x - e->x;
-    float dy = target.y - e->y;
+    e->t += deltaTime / 3.0f;
+    SDL_FPoint pos =
+        bezier_point(e->control_points[0], e->control_points[1],
+                     e->control_points[2], e->control_points[3], e->t);
 
-    float length = sqrt(dx * dx + dy * dy);
+    e->x = pos.x;
+    e->y = pos.y;
 
-    if (length < 1.0f) {
-      e->currentWaypoint++;
-      if (e->currentWaypoint >= e->pathLength) {
-        e->state = ENEMY_HOLDING;
-      }
-    } else {
-      dx = dx / length;
-      dy = dy / length;
-      e->x += dx * e->speed * deltaTime;
-      e->y += dy * e->speed * deltaTime;
+    if (e->t >= 1.0f) {
+      e->t = 1.0f; // clamp it
+      e->state = ENEMY_HOLDING;
     }
+
     break;
   }
 
   case ENEMY_HOLDING:
-    float baseX = e->path[e->pathLength - 1].x;
-    float baseY = e->path[e->pathLength - 1].y;
+    float baseX = e->control_points[3].x;
+    float baseY = e->control_points[3].y;
 
     float timeFactor = (SDL_GetTicks64() / 2000.0f) * (2.0f * M_PI);
-    float yOffset = sin(timeFactor) * 25.0f;
+    float yOffset = sinf(timeFactor) * 20.0f;
 
     e->x = baseX;
     e->y = baseY + yOffset;

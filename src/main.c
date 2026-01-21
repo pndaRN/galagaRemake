@@ -46,8 +46,8 @@ int main(int argc, char *argv[]) {
 
   SDL_FPoint test_path[] = {
       {640, -50},
-      {960, 200},
-      {640, 400},
+      {900, 50},
+      {900, 150},
       {640, 200},
   };
 
@@ -95,7 +95,8 @@ int main(int argc, char *argv[]) {
       if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_e) {
         for (int i = 0; i < MAX_ENEMIES; i++) {
           if (!enemies[i].active) {
-            enemies[i] = enemy_init(test_path, 4, 400.0f);
+            enemies[i] = enemy_init(test_path[0], test_path[1], test_path[2],
+                                    test_path[3], 400.0f);
             break;
           }
         }
