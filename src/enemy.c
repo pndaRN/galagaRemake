@@ -35,10 +35,6 @@ void enemy_update(Enemy *e, float deltaTime, int screen_height) {
   if (!e->active)
     return;
 
-  static int frame = 0;
-  printf("Frame %d: Enemy at (%.1f, %.1f) state=%d waypoint=%d\n", frame++,
-         e->x, e->y, e->state, e->currentWaypoint);
-
   switch (e->state) {
   case ENEMY_ENTERING: {
     SDL_FPoint target = e->path[e->currentWaypoint];
@@ -63,6 +59,14 @@ void enemy_update(Enemy *e, float deltaTime, int screen_height) {
   }
 
   case ENEMY_HOLDING:
+    float baseX = e->path[e->pathLength - 1].x;
+    float baseY = e->path[e->pathLength - 1].y;
+
+    float timeFactor = (SDL_GetTicks64() / 2000.0f) * (2.0f * M_PI);
+    float yOffset = sin(timeFactor) * 25.0f;
+
+    e->x = baseX;
+    e->y = baseY + yOffset;
     break;
 
   case ENEMY_DIVING:
