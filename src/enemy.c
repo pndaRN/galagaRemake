@@ -6,7 +6,7 @@
 // #include <stdlib.h>
 
 Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3,
-                 float speed) {
+                 float speed, SDL_FPoint formation_position) {
   Enemy e;
 
   e.width = 50;
@@ -24,6 +24,8 @@ Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3,
   e.t = 0.0f;
   e.x = p0.x;
   e.y = p0.y;
+
+  e.formation_point = formation_position;
 
   return e;
 }
@@ -52,8 +54,8 @@ void enemy_update(Enemy *e, float deltaTime, int screen_height) {
   }
 
   case ENEMY_HOLDING:
-    float baseX = e->control_points[3].x;
-    float baseY = e->control_points[3].y;
+    float baseX = e->formation_point.x;
+    float baseY = e->formation_point.y;
 
     float timeFactor = (SDL_GetTicks64() / 2000.0f) * (2.0f * M_PI);
     float yOffset = sinf(timeFactor) * 20.0f;
