@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
   }
 
   SDL_Renderer *renderer =
-      SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+      SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
   bool running = true;
   SDL_Event event;
