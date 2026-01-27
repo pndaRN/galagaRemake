@@ -20,8 +20,8 @@ typedef struct {
 } Wave;
 
 Wave wave_init(int total_enemies, float speed, SDL_FPoint p0, SDL_FPoint p1,
-               SDL_FPoint p2, SDL_FPoint p3, SDL_Point *formation_positions);
+               SDL_FPoint p2, SDL_FPoint p3, SDL_FPoint *formation_positions);
 
-Wave wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies);
+void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies);
 
 #endif

@@ -20,16 +20,29 @@ Wave wave_init(int total_enemies, float speed, SDL_FPoint p0, SDL_FPoint p1,
   return w;
 }
 
-Wave wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
-    // 1. Check if wave is active
+void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
+    if (!w->is_active) {
+        return;
+    }
     
-    // 2. Add deltaTime to spawn_timer
-    
-    // 3. If spawn_timer >= spawn_delay AND spawn_count < total_enemies:
-    //    - Find inactive enemy slot
-    //    - Spawn enemy with enemy_init
-    //    - Increment spawn_count
-    //    - Reset spawn_timer
-    
-    // 4. If spawn_count >= total_enemies, set is_active = false
+    w->spawn_timer += deltaTime;
+
+    if (w->spawn_timer >= w->spawn_delay && w->spawn_count < w->total_enemies){
+        for (int i = 0; i < max_enemies; i++) {
+          if (!e[i].active) {
+            e[i] = enemy_init(w->control_points[0], 
+                              w->control_points[1],
+                              w->control_points[2],
+                              w->control_points[3], 
+                              w->speed,
+                              w->formation_positions[w->spawn_count]);
+            w->spawn_count += 1;
+            w->spawn_timer = 0.0f;
+            break;
+          }
+        }
+    }
+    if (w->spawn_count >= w->total_enemies) {
+        w->is_active = false;
+    }
 }
