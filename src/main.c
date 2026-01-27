@@ -168,7 +168,11 @@ int main(int argc, char *argv[]) {
       if (bullets[i].active) {
         SDL_Rect bulletRect = {(int)bullets[i].x, (int)bullets[i].y,
                                bullets[i].width, bullets[i].height};
-        SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+        if (bullets[i].current_ammo == AMMO_PCN) {
+          SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+        } else {
+          SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+        }
         SDL_RenderFillRect(renderer, &bulletRect);
       }
     }
