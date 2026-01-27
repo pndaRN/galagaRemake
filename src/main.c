@@ -2,6 +2,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "player.h"
+#include "wave.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_error.h>
@@ -42,14 +43,25 @@ int main(int argc, char *argv[]) {
 
   srand(time(NULL));
 
+  SDL_FPoint test_path[] = {
+    {640, -50},
+    {900, 50},
+    {900, 150},
+    {640, 200},
+  };
+
+  SDL_FPoint formation_positions[5];
+  for (int i = 0; i < 5; i++) {
+    formation_positions[i].x = (SCREEN_WIDTH / 6) * (i + 1);
+    formation_positions[i].y = 200;
+  }
+
   Player player = player_create(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-  SDL_FPoint test_path[] = {
-      {640, -50},
-      {900, 50},
-      {900, 150},
-      {640, 200},
-  };
+  Wave wave = wave_init(5, 400.0f, test_path[0], test_path[1], 
+                        test_path[2], test_path[3], formation_positions);
+
+
 
   Bullet bullets[MAX_BULLETS];
   for (int i = 0; i < MAX_BULLETS; i++) {
@@ -92,20 +104,12 @@ int main(int argc, char *argv[]) {
           }
         }
       }
-      if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_e) {
-        for (int i = 0; i < MAX_ENEMIES; i++) {
-          if (!enemies[i].active) {
-            enemies[i] = enemy_init(test_path[0], test_path[1], test_path[2],
-                                    test_path[3], 400.0f);
-            break;
-          }
-        }
-      }
     }
 
     const Uint8 *keystate = SDL_GetKeyboardState(NULL);
 
     player_update(&player, keystate, deltaTime, SCREEN_WIDTH);
+    wave_update(&wave, deltaTime, enemies, MAX_ENEMIES);
     for (int i = 0; i < MAX_BULLETS; i++) {
       if (bullets[i].active) {
         bullet_update(&bullets[i], deltaTime);
