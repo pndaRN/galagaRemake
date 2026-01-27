@@ -104,6 +104,20 @@ int main(int argc, char *argv[]) {
           }
         }
       }
+      if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_e){
+        if (player.current_ammo == AMMO_PCN) {
+          player.current_ammo = AMMO_POLYMYXIN;
+        } else {
+          player.current_ammo = AMMO_PCN;
+        }
+      }
+      if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_q){
+        if (player.current_ammo == AMMO_PCN) {
+          player.current_ammo = AMMO_POLYMYXIN;
+        } else {
+          player.current_ammo = AMMO_PCN;
+        }
+      }
     }
 
     const Uint8 *keystate = SDL_GetKeyboardState(NULL);
@@ -143,7 +157,11 @@ int main(int argc, char *argv[]) {
     SDL_Rect playerRect = {(int)player.x, (int)player.y, player.width,
                            player.height};
 
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    if (player.current_ammo == AMMO_PCN) {
+      SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    } else {
+      SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+    }
     SDL_RenderFillRect(renderer, &playerRect);
 
     for (int i = 0; i < MAX_BULLETS; i++) {
