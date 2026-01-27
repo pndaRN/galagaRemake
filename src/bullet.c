@@ -12,6 +12,8 @@ Bullet bullet_init(Player *player) {
     b.speed = 300;
     b.active = true;
 
+    b.type = p->current_ammo;
+
     return b;
 }
 

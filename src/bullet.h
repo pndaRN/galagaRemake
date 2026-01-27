@@ -10,6 +10,7 @@ typedef struct {
     float x, y, speed;
     int width, height;
     bool active;
+    AmmoType type
 } Bullet;
 
 Bullet bullet_init(Player *player);

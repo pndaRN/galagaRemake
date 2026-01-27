@@ -2,11 +2,17 @@
 #define PLAYER_H
 #include <SDL2/SDL.h>
 
+typedef enum {
+  AMMO_PCN,
+  AMMO_POLYMYXIN
+} AmmoType;
+
 typedef struct {
   float x, y;
   int width;
   int height;
   float speed;
+  AmmoType current_ammo;
 } Player;
 
 Player player_create(int screen_width, int screen_height);

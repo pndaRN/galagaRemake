@@ -13,6 +13,11 @@ typedef enum {
   ENEMY_RETURNING
 } EnemyState;
 
+typedef enum {
+  BACTERIA_GRAM_POSITIVE,
+  BACTERIA_GRAM_NEGATIVE,
+} EnemyType;
+
 typedef struct {
   float x, y, speed;
   int width, height;

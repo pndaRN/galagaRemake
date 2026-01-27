@@ -9,6 +9,8 @@ Player player_create(int screen_width, int screen_height) {
   p.y = screen_height - p.height - 20;
   p.speed = 300;
 
+  p.current_ammo = AMMO_PCN;
+
   return p;
 }
 
