@@ -30,6 +30,7 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
     if (w->spawn_timer >= w->spawn_delay && w->spawn_count < w->total_enemies){
         for (int i = 0; i < max_enemies; i++) {
           if (!e[i].active) {
+            EnemyType type = (w->spawn_count % 2 == 0) ? BACTERIA_GRAM_POSITIVE : BACTERIA_GRAM_NEGATIVE;
             e[i] = enemy_init(w->control_points[0], 
                               w->control_points[1],
                               w->control_points[2],

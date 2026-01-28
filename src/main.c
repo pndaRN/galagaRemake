@@ -143,8 +143,13 @@ int main(int argc, char *argv[]) {
             if (check_collision(bullets[i].x, bullets[i].y, bullets[i].width,
                                 bullets[i].height, enemies[j].x, enemies[j].y,
                                 enemies[j].width, enemies[j].height)) {
+              bool effective = 
+                  (bullets[i].type == AMMO_PCN && enemies[j].type == BACTERIA_GRAM_POSITIVE) ||
+                  (bullets[i].type == AMMO_POLYMYXIN && enemies[j].type == BACTERIA_GRAM_NEGATIVE);
+              if (effective) {
+                enemies[j].active = false;
+              }
               bullets[i].active = false;
-              enemies[j].active = false;
               break;
             }
           }
@@ -181,7 +186,11 @@ int main(int argc, char *argv[]) {
       if (enemies[i].active) {
         SDL_Rect enemyRect = {(int)enemies[i].x, (int)enemies[i].y,
                               enemies[i].width, enemies[i].height};
-        SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
+        if (enemies[i].type == BACTERIA_GRAM_POSITIVE) {
+          SDL_SetRenderDrawColor(renderer, 0, 125, 0, 255);
+        } else {
+          SDL_SetRenderDrawColor(renderer, 0, 0, 125, 255);
+        }
         SDL_RenderFillRect(renderer, &enemyRect);
       }
     }

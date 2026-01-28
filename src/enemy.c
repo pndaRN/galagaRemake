@@ -6,7 +6,7 @@
 // #include <stdlib.h>
 
 Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3,
-                 float speed, SDL_FPoint formation_position) {
+                 float speed, SDL_FPoint formation_position, EnemyType type) {
   Enemy e;
 
   e.width = 50;
@@ -26,6 +26,8 @@ Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3,
   e.y = p0.y;
 
   e.formation_point = formation_position;
+
+  e.type = type;
 
   return e;
 }
