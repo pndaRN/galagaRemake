@@ -35,8 +35,8 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  SDL_Renderer *renderer =
-      SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+  SDL_Renderer *renderer = SDL_CreateRenderer(
+      window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
   bool running = true;
   SDL_Event event;
@@ -44,24 +44,22 @@ int main(int argc, char *argv[]) {
   srand(time(NULL));
 
   SDL_FPoint test_path[] = {
-    {640, -50},
-    {900, 50},
-    {900, 150},
-    {640, 200},
+      {640, -50},
+      {900, 50},
+      {900, 150},
+      {640, 200},
   };
 
   SDL_FPoint formation_positions[5];
   for (int i = 0; i < 5; i++) {
-    formation_positions[i].x = (SCREEN_WIDTH / 6) * (i + 1);
+    formation_positions[i].x = (SCREEN_WIDTH / 6.0f) * (i + 1);
     formation_positions[i].y = 200;
   }
 
   Player player = player_create(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-  Wave wave = wave_init(5, 400.0f, test_path[0], test_path[1], 
-                        test_path[2], test_path[3], formation_positions);
-
-
+  Wave wave = wave_init(5, 400.0f, test_path[0], test_path[1], test_path[2],
+                        test_path[3], formation_positions);
 
   Bullet bullets[MAX_BULLETS];
   for (int i = 0; i < MAX_BULLETS; i++) {
@@ -104,14 +102,14 @@ int main(int argc, char *argv[]) {
           }
         }
       }
-      if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_e){
+      if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_e) {
         if (player.current_ammo == AMMO_PCN) {
           player.current_ammo = AMMO_POLYMYXIN;
         } else {
           player.current_ammo = AMMO_PCN;
         }
       }
-      if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_q){
+      if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_q) {
         if (player.current_ammo == AMMO_PCN) {
           player.current_ammo = AMMO_POLYMYXIN;
         } else {
@@ -143,9 +141,10 @@ int main(int argc, char *argv[]) {
             if (check_collision(bullets[i].x, bullets[i].y, bullets[i].width,
                                 bullets[i].height, enemies[j].x, enemies[j].y,
                                 enemies[j].width, enemies[j].height)) {
-              bool effective = 
-                  (bullets[i].type == AMMO_PCN && enemies[j].type == BACTERIA_GRAM_POSITIVE) ||
-                  (bullets[i].type == AMMO_POLYMYXIN && enemies[j].type == BACTERIA_GRAM_NEGATIVE);
+              bool effective = (bullets[i].type == AMMO_PCN &&
+                                enemies[j].type == BACTERIA_GRAM_POSITIVE) ||
+                               (bullets[i].type == AMMO_POLYMYXIN &&
+                                enemies[j].type == BACTERIA_GRAM_NEGATIVE);
               if (effective) {
                 enemies[j].active = false;
               }
@@ -173,7 +172,7 @@ int main(int argc, char *argv[]) {
       if (bullets[i].active) {
         SDL_Rect bulletRect = {(int)bullets[i].x, (int)bullets[i].y,
                                bullets[i].width, bullets[i].height};
-        if (bullets[i].current_ammo == AMMO_PCN) {
+        if (bullets[i].type == AMMO_PCN) {
           SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
         } else {
           SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
