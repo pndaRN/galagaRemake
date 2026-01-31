@@ -22,6 +22,7 @@ typedef struct {
   float x, y, speed;
   int width, height;
   bool active;
+  Uint64 state_start_time;
   EnemyState state;
   EnemyType type;
 

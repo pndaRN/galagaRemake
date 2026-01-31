@@ -14,6 +14,8 @@ Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3,
   e.speed = speed;
   e.active = true;
 
+  e.state_start_time = 0;
+
   e.state = ENEMY_ENTERING;
 
   e.control_points[0] = p0;
@@ -50,6 +52,7 @@ void enemy_update(Enemy *e, float deltaTime, int screen_height) {
     if (e->t >= 1.0f) {
       e->t = 1.0f; // clamp it
       e->state = ENEMY_HOLDING;
+      e->state_start_time = SDL_GetTicks64();
     }
 
     break;
@@ -59,7 +62,7 @@ void enemy_update(Enemy *e, float deltaTime, int screen_height) {
     float baseX = e->formation_point.x;
     float baseY = e->formation_point.y;
 
-    float timeFactor = (SDL_GetTicks64() / 2000.0f) * (2.0f * M_PI);
+    float timeFactor = ((SDL_GetTicks64() - e->state_start_time) / 2000.0f) * (2.0f * M_PI);
     float yOffset = sinf(timeFactor) * 20.0f;
 
     e->x = baseX;
