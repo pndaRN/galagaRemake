@@ -49,18 +49,18 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
     }
   }
   if (w->spawn_count == w->total_enemies && !w->formation_complete){
-  bool all_holding = true; 
-  for (int i = 0; i < w->spawn_count; i++){
-    if (e[w->enemy_indices[i]].state != ENEMY_HOLDING) {
-      all_holding = false;
-      break;
+    bool all_holding = true; 
+    for (int i = 0; i < w->spawn_count; i++){
+      if (e[w->enemy_indices[i]].state != ENEMY_HOLDING) {
+        all_holding = false;
+        break;
+      }
+    }
+    if (all_holding) {
+      w->formation_complete = true;
+      w->formation_complete_time = SDL_GetTicks64();
     }
   }
-  if (all_holding) {
-    w->formation_complete = true;
-    w->formation_complete_time = SDL_GetTicks64();
-  }
-}
   if (w->spawn_count >= w->total_enemies) {
     w->is_active = false;
   }
