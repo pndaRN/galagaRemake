@@ -13,6 +13,11 @@ typedef struct {
   float spawn_delay;
   float spawn_timer;
 
+  int *enemy_indices;
+
+  bool formation_complete;
+  Uint64 formation_complete_time;
+
   SDL_FPoint control_points[4];
   SDL_FPoint *formation_positions;
 
