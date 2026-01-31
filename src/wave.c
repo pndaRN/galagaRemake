@@ -32,6 +32,8 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
 
   w->spawn_timer += deltaTime;
 
+// SPAWN ENEMIES
+
   if (w->spawn_timer >= w->spawn_delay && w->spawn_count < w->total_enemies) {
     for (int i = 0; i < max_enemies; i++) {
       if (!e[i].active) {
@@ -48,6 +50,9 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
       }
     }
   }
+
+// CHECK IF SPAWNED ENEMIES ARE IN HOLDING
+
   if (w->spawn_count == w->total_enemies && !w->formation_complete){
     bool all_holding = true; 
     for (int i = 0; i < w->spawn_count; i++){
