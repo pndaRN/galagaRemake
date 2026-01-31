@@ -69,4 +69,11 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
   if (w->spawn_count >= w->total_enemies) {
     w->is_active = false;
   }
+
+// ENEMY STARTS DIVE
+
+  if (SDL_GetTicks64() >= formation_complete_time + 1000.0f) {
+
+  }
+
 }
