@@ -1,4 +1,5 @@
 #include "wave.h"
+#include "enemy.h"
 
 Wave wave_init(int total_enemies, float speed, SDL_FPoint p0, SDL_FPoint p1,
                SDL_FPoint p2, SDL_FPoint p3, SDL_FPoint *formation_positions) {
@@ -11,9 +12,11 @@ Wave wave_init(int total_enemies, float speed, SDL_FPoint p0, SDL_FPoint p1,
   w.spawn_count = 0;
   w.spawn_delay = 0.3f;
   w.spawn_timer = 0.3f;
+  w.dive_timer = 0.0;
+  w.dive_delay = 2.0;
 
-  bool formation_complete = false;
-  Uint64 formation_complete_time = 0;
+  w.formation_complete = false;
+  w.formation_complete_time = 0;
 
   w.control_points[0] = p0;
   w.control_points[1] = p1;
@@ -66,12 +69,42 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
       w->formation_complete_time = SDL_GetTicks64();
     }
   }
-  if (w->spawn_count >= w->total_enemies) {
-    w->is_active = false;
-  }
 
   // ENEMY STARTS DIVE
 
-  if (SDL_GetTicks64() >= w->formation_complete_time + 1000.0f) {
+  w->dive_timer += deltaTime;
+
+  if (w->formation_complete &&
+      SDL_GetTicks64() >= w->formation_complete_time + 1000.0f &&
+      w->dive_timer >= w->dive_delay) {
+    int candidates[w->spawn_count];
+    int candidates_count = 0;
+
+    for (int i = 0; i < w->spawn_count; i++) {
+      int idx = w->enemy_indices[i];
+      if (e[idx].active && e[idx].state == ENEMY_HOLDING) {
+        candidates[candidates_count] = idx;
+        candidates_count++;
+      }
+    }
+    if (candidates_count > 0) {
+      int pick = rand() % candidates_count;
+      int rand_index = candidates[pick];
+      e[rand_index].state = ENEMY_DIVING;
+      e[rand_index].state_start_time = SDL_GetTicks64();
+      w->dive_timer = 0.0f;
+    }
+  }
+
+  // CHECKS IF ALL ENEMIES IN WAVE ARE INACTIVE
+  bool all_dead = true;
+  for (int i = 0; i < w->spawn_count; i++) {
+    if (e[w->enemy_indices[i]].active) {
+      all_dead = false;
+      break;
+    }
+    if (all_dead && w->spawn_count == w->total_enemies) {
+      w->is_active = false;
+    }
   }
 }

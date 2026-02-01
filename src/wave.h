@@ -12,6 +12,8 @@ typedef struct {
   float speed;
   float spawn_delay;
   float spawn_timer;
+  float dive_timer;
+  float dive_delay;
 
   int *enemy_indices;
 
