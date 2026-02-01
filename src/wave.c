@@ -10,7 +10,7 @@ Wave wave_init(int total_enemies, float speed, SDL_FPoint p0, SDL_FPoint p1,
 
   w.spawn_count = 0;
   w.spawn_delay = 0.3f;
-  w.spawn_timer = 0.3f; 
+  w.spawn_timer = 0.3f;
 
   bool formation_complete = false;
   Uint64 formation_complete_time = 0;
@@ -32,7 +32,7 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
 
   w->spawn_timer += deltaTime;
 
-// SPAWN ENEMIES
+  // SPAWN ENEMIES
 
   if (w->spawn_timer >= w->spawn_delay && w->spawn_count < w->total_enemies) {
     for (int i = 0; i < max_enemies; i++) {
@@ -43,7 +43,7 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
                           w->control_points[2],
                           w->formation_positions[w->spawn_count], w->speed,
                           w->formation_positions[w->spawn_count], type);
-        w->enemy_indices[spawn_count] = i;
+        w->enemy_indices[w->spawn_count] = i;
         w->spawn_count += 1;
         w->spawn_timer = 0.0f;
         break;
@@ -51,11 +51,11 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
     }
   }
 
-// CHECK IF SPAWNED ENEMIES ARE IN HOLDING
+  // CHECK IF SPAWNED ENEMIES ARE IN HOLDING
 
-  if (w->spawn_count == w->total_enemies && !w->formation_complete){
-    bool all_holding = true; 
-    for (int i = 0; i < w->spawn_count; i++){
+  if (w->spawn_count == w->total_enemies && !w->formation_complete) {
+    bool all_holding = true;
+    for (int i = 0; i < w->spawn_count; i++) {
       if (e[w->enemy_indices[i]].state != ENEMY_HOLDING) {
         all_holding = false;
         break;
@@ -70,10 +70,8 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
     w->is_active = false;
   }
 
-// ENEMY STARTS DIVE
+  // ENEMY STARTS DIVE
 
-  if (SDL_GetTicks64() >= formation_complete_time + 1000.0f) {
-
+  if (SDL_GetTicks64() >= w->formation_complete_time + 1000.0f) {
   }
-
 }

@@ -65,7 +65,7 @@ void enemy_update(Enemy *e, float deltaTime, int screen_height) {
     Uint64 elapsed = SDL_GetTicks64() - e->state_start_time;
     float timeFactor = (elapsed / 2000.0f) * (2.0f * M_PI);
 
-    float ramp = fminf(elapsed / 500.0f, 1.0f);
+    float ramp = fminf(elapsed / 1000.0f, 1.0f);
     float yOffset = sinf(timeFactor) * 20.0f * ramp;
 
     e->x = baseX;
