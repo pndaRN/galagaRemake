@@ -1,4 +1,5 @@
 #include "enemy.h"
+#include "bacteria.h"
 #include "math_utils.h"
 
 #include <SDL2/SDL_rect.h>
@@ -6,7 +7,8 @@
 // #include <stdlib.h>
 
 Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3,
-                 float speed, SDL_FPoint formation_position, EnemyType type) {
+                 float speed, SDL_FPoint formation_position,
+                 BacteriaSpecies species) {
   Enemy e;
 
   e.width = 50;
@@ -29,7 +31,8 @@ Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3,
 
   e.formation_point = formation_position;
 
-  e.type = type;
+  e.dive_initialized = false;
+  e.species = species;
 
   return e;
 }
@@ -73,6 +76,14 @@ void enemy_update(Enemy *e, float deltaTime, int screen_height) {
     break;
 
   case ENEMY_DIVING:
+    const BacteriaDefinition *def = get_bacteria_def(e->species);
+
+    if (!e->dive_initialized) {
+      def->dive_init(e, 0);
+      e->dive_initialized = true;
+    }
+
+    def->dive_update(e, deltaTime, screen_height);
     break;
 
   case ENEMY_RETURNING:

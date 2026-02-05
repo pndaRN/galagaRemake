@@ -1,6 +1,7 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
+#include "bacteria.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_rect.h>
 #include <math.h>
@@ -13,18 +14,16 @@ typedef enum {
   ENEMY_RETURNING
 } EnemyState;
 
-typedef enum {
-  BACTERIA_GRAM_POSITIVE,
-  BACTERIA_GRAM_NEGATIVE,
-} EnemyType;
-
-typedef struct {
+typedef struct Enemy {
   float x, y, speed;
   int width, height;
   bool active;
   Uint64 state_start_time;
   EnemyState state;
-  EnemyType type;
+
+  BacteriaSpecies species;
+  DiveState dive_state;
+  bool dive_initialized;
 
   SDL_FPoint control_points[4];
   SDL_FPoint formation_point;
@@ -34,7 +33,8 @@ typedef struct {
 } Enemy;
 
 Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3,
-                 float speed, SDL_FPoint formation_position, EnemyType type);
+                 float speed, SDL_FPoint formation_position,
+                 BacteriaSpecies species);
 
 void enemy_update(Enemy *e, float deltaTime, int screen_height);
 
