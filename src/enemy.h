@@ -36,6 +36,6 @@ Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3,
                  float speed, SDL_FPoint formation_position,
                  BacteriaSpecies species);
 
-void enemy_update(Enemy *e, float deltaTime, int screen_height);
+void enemy_update(Enemy *e, float deltaTime, int screen_height, float player_x);
 
 #endif

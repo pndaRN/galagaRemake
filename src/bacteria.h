@@ -17,6 +17,8 @@ typedef enum {
 
 typedef enum { GRAM_POSITIVE, GRAM_NEGATIVE } GramType;
 
+typedef enum { IS_BURSTING, IS_PAUSING, IS_DIVING } ScatterPhase;
+
 typedef struct {
   DiveType type;
   union {
@@ -24,11 +26,14 @@ typedef struct {
       float phase;
       float amplitude;
       float frequency;
+      float start_x;
+      float dive_speed;
     } sine;
     struct {
-      float burst_angle;
-      float burst_timer;
-      bool has_burst;
+      float burst_angle, burst_speed;
+      float timer, burst_duration, pause_duration;
+      float start_x, start_y, target_x;
+      ScatterPhase phase;
     } scatter;
     struct {
       int direction;
@@ -43,7 +48,8 @@ typedef struct {
 } DiveState;
 
 typedef void (*DiveInitFn)(Enemy *e, float player_x);
-typedef void (*DiveUpdateFn)(Enemy *e, float deltaTime, int screen_height);
+typedef void (*DiveUpdateFn)(Enemy *e, float deltaTime, int screen_height,
+                             float player_x);
 
 typedef struct {
   BacteriaSpecies species;

@@ -37,7 +37,8 @@ Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3,
   return e;
 }
 
-void enemy_update(Enemy *e, float deltaTime, int screen_height) {
+void enemy_update(Enemy *e, float deltaTime, int screen_height,
+                  float player_x) {
   if (!e->active)
     return;
 
@@ -79,11 +80,11 @@ void enemy_update(Enemy *e, float deltaTime, int screen_height) {
     const BacteriaDefinition *def = get_bacteria_def(e->species);
 
     if (!e->dive_initialized) {
-      def->dive_init(e, 0);
+      def->dive_init(e, player_x);
       e->dive_initialized = true;
     }
 
-    def->dive_update(e, deltaTime, screen_height);
+    def->dive_update(e, deltaTime, screen_height, player_x);
     break;
 
   case ENEMY_RETURNING:

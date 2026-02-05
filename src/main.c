@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
 
     for (int i = 0; i < MAX_ENEMIES; i++) {
       if (enemies[i].active) {
-        enemy_update(&enemies[i], deltaTime, SCREEN_HEIGHT);
+        enemy_update(&enemies[i], deltaTime, SCREEN_HEIGHT, player.x);
       }
     }
 
