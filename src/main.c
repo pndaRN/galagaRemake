@@ -189,11 +189,7 @@ int main(int argc, char *argv[]) {
         SDL_Rect enemyRect = {(int)enemies[i].x, (int)enemies[i].y,
                               enemies[i].width, enemies[i].height};
         const BacteriaDefinition *def = get_bacteria_def(enemies[i].species);
-        if (def->gram_type == GRAM_POSITIVE) {
-          SDL_SetRenderDrawColor(renderer, 0, 125, 0, 255);
-        } else {
-          SDL_SetRenderDrawColor(renderer, 0, 0, 125, 255);
-        }
+        SDL_SetRenderDrawColor(renderer, def->r, def->g, def->b, 255);
         SDL_RenderFillRect(renderer, &enemyRect);
       }
     }

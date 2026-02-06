@@ -57,6 +57,7 @@ typedef struct {
   DiveType dive_type;
   DiveInitFn dive_init;
   DiveUpdateFn dive_update;
+  Uint8 r, g, b;
 } BacteriaDefinition;
 
 const BacteriaDefinition *get_bacteria_def(BacteriaSpecies species);
