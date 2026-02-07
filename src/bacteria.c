@@ -6,6 +6,7 @@
 #include <stdlib.h>
 
 void strep_dive_init(Enemy *e, float player_x) {
+  (void)player_x;
   e->dive_state.type = DIVE_SINE;
   e->dive_state.sine.phase = 0.0f;
   e->dive_state.sine.amplitude = 75.0f;
@@ -16,17 +17,20 @@ void strep_dive_init(Enemy *e, float player_x) {
 
 void strep_dive_update(Enemy *e, float deltaTime, int screen_height,
                        float player_x) {
+  (void)player_x;
   e->dive_state.sine.phase +=
       e->dive_state.sine.frequency * 2.0f * M_PI * deltaTime;
   e->x = e->dive_state.sine.start_x +
          sinf(e->dive_state.sine.phase) * e->dive_state.sine.amplitude;
   e->y += e->dive_state.sine.dive_speed * deltaTime;
   if (e->y > screen_height) {
-    e->active = false;
+    e->state = ENEMY_RETURNING;
+    e->dive_initialized = false;
   }
 }
 
 void staph_dive_init(Enemy *e, float player_x) {
+  (void)player_x;
   e->dive_state.type = DIVE_SCATTER;
   e->dive_state.scatter.start_x = e->x;
   e->dive_state.scatter.start_y = e->y;
@@ -72,7 +76,8 @@ void staph_dive_update(Enemy *e, float deltaTime, int screen_height,
     e->y += deltaTime * e->dive_state.scatter.burst_speed;
 
     if (e->y > screen_height) {
-      e->active = false;
+      e->state = ENEMY_RETURNING;
+      e->dive_initialized = false;
     }
   }
 }
@@ -116,11 +121,13 @@ void ecoli_dive_update(Enemy *e, float deltaTime, int screen_height,
     }
   }
   if (e->y > screen_height) {
-    e->active = false;
+    e->state = ENEMY_RETURNING;
+    e->dive_initialized = false;
   }
 }
 
 void pseudomonas_dive_init(Enemy *e, float player_x) {
+  (void)player_x;
   e->dive_state.type = DIVE_SWEEP;
   e->dive_state.sweep.t = 0.0f;
   e->dive_state.sweep.control_points[0].x = e->x;
@@ -142,7 +149,8 @@ void pseudomonas_dive_init(Enemy *e, float player_x) {
 
 void pseudomonas_dive_update(Enemy *e, float deltaTime, int screen_height,
                              float player_x) {
-
+  (void)screen_height;
+  (void)player_x;
   e->dive_state.sweep.t += deltaTime / 2.0f;
   SDL_FPoint pos = bezier_point(e->dive_state.sweep.control_points[0],
                                 e->dive_state.sweep.control_points[1],
@@ -155,7 +163,8 @@ void pseudomonas_dive_update(Enemy *e, float deltaTime, int screen_height,
 
   if (e->dive_state.sweep.t >= 1.0f) {
     e->dive_state.sweep.t = 1.0f; // clamp it
-    e->active = false;
+    e->state = ENEMY_RETURNING;
+    e->dive_initialized = false;
   }
 }
 

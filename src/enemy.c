@@ -91,6 +91,40 @@ void enemy_update(Enemy *e, float deltaTime, int screen_height,
     break;
 
   case ENEMY_RETURNING:
-    break;
+    if (!e->dive_initialized) {
+      e->control_points[0].x = e->x;
+      e->control_points[0].y = 0 - e->height;
+      e->control_points[3].x = e->formation_point.x;
+      e->control_points[3].y = e->formation_point.y;
+
+      float dx = e->control_points[3].x - e->control_points[0].x;
+      float dy = e->control_points[3].y - e->control_points[0].y;
+
+      e->control_points[1].x = e->control_points[0].x + dx * (1.0f / 3.0f);
+      e->control_points[1].y = e->control_points[0].y + dy * (1.0f / 3.0f);
+
+      e->control_points[2].x = e->control_points[0].x + dx * (2.0f / 3.0f);
+      e->control_points[2].y = e->control_points[0].y + dy * (2.0f / 3.0f);
+
+      float offset = (e->x > e->screen_width / 2.0f) ? -150.0f : 150.0f;
+      e->control_points[1].x += offset;
+      e->control_points[2].x += offset;
+
+      e->t = 0.0f;
+      e->dive_initialized = true;
+    }
+    e->t += deltaTime / 2.0f;
+    SDL_FPoint pos =
+        bezier_point(e->control_points[0], e->control_points[1],
+                     e->control_points[2], e->control_points[3], e->t);
+
+    e->x = pos.x;
+    e->y = pos.y;
+    if (e->t >= 1.0f) {
+      e->t = 1.0f; // clamp it
+      e->state = ENEMY_HOLDING;
+      e->state_start_time = SDL_GetTicks64();
+      e->dive_initialized = false;
+    }
   }
 }
