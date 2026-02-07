@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_rect.h>
 #include <SDL2/SDL_render.h>
+#include <time.h>
 
 static const SDL_FPoint test_path[] = {
     {640, -50},
@@ -35,6 +36,8 @@ void game_init(GameState *state) {
   state->spawn_timer = 0.0f;
   state->current_wave = 0;
   state->level = 1;
+
+  srand(time(NULL));
 }
 
 void game_render(const GameState *state, SDL_Renderer *renderer) {

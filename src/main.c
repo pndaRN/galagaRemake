@@ -1,20 +1,7 @@
-#include "bacteria.h"
-#include "bullet.h"
-#include "collision.h"
-#include "enemy.h"
 #include "game.h"
-#include "player.h"
-#include "wave.h"
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_error.h>
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_rect.h>
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_video.h>
 #include <stdbool.h>
-#include <stdio.h>
-#include <time.h>
 
 int main(int argc, char *argv[]) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -35,161 +22,24 @@ int main(int argc, char *argv[]) {
   SDL_Renderer *renderer = SDL_CreateRenderer(
       window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
+  GameState state;
+  game_init(&state);
+
   bool running = true;
   SDL_Event event;
-
-  srand(time(NULL));
-
-  SDL_FPoint test_path[] = {
-      {640, -50},
-      {900, 50},
-      {900, 150},
-      {640, 200},
-  };
-
-  SDL_FPoint formation_positions[5];
-  for (int i = 0; i < 5; i++) {
-    formation_positions[i].x = (SCREEN_WIDTH / 6.0f) * (i + 1);
-    formation_positions[i].y = 200;
-  }
-
-  Player player = player_create(SCREEN_WIDTH, SCREEN_HEIGHT);
-
-  Wave wave = wave_init(5, 400.0f, test_path[0], test_path[1], test_path[2],
-                        test_path[3], formation_positions);
-
-  Bullet bullets[MAX_BULLETS];
-  for (int i = 0; i < MAX_BULLETS; i++) {
-    bullets[i].active = false;
-  }
-
-  Enemy enemies[MAX_ENEMIES];
-  for (int i = 0; i < MAX_ENEMIES; i++) {
-    enemies[i].active = false;
-  }
-
   Uint64 lastTime = SDL_GetTicks64();
-  float deltaTime = 0.0f;
 
   // GAME LOOP
 
   while (running) {
-
     Uint64 currentTime = SDL_GetTicks64();
-    deltaTime = (currentTime - lastTime) / 1000.0f;
+    float deltaTime = (currentTime - lastTime) / 1000.0f;
     lastTime = currentTime;
 
-    while (SDL_PollEvent(&event)) {
-      if (event.type == SDL_QUIT) {
-        running = false;
-      }
-      if (event.type == SDL_WINDOWEVENT &&
-          event.window.event == SDL_WINDOWEVENT_CLOSE) {
-        running = false;
-      }
-      if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
-        running = false;
-      }
-      if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
-        for (int i = 0; i < MAX_BULLETS; i++) {
-          if (!bullets[i].active) {
-            bullets[i] = bullet_init(&player);
-            break;
-          }
-        }
-      }
-      if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_e) {
-        if (player.current_ammo == AMMO_PCN) {
-          player.current_ammo = AMMO_POLYMYXIN;
-        } else {
-          player.current_ammo = AMMO_PCN;
-        }
-      }
-      if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_q) {
-        if (player.current_ammo == AMMO_PCN) {
-          player.current_ammo = AMMO_POLYMYXIN;
-        } else {
-          player.current_ammo = AMMO_PCN;
-        }
-      }
-    }
-
+    game_handle_events(&state, &event, &running);
     const Uint8 *keystate = SDL_GetKeyboardState(NULL);
-
-    player_update(&player, keystate, deltaTime, SCREEN_WIDTH);
-    wave_update(&wave, deltaTime, enemies, MAX_ENEMIES);
-    for (int i = 0; i < MAX_BULLETS; i++) {
-      if (bullets[i].active) {
-        bullet_update(&bullets[i], deltaTime);
-      }
-    }
-
-    for (int i = 0; i < MAX_ENEMIES; i++) {
-      if (enemies[i].active) {
-        enemy_update(&enemies[i], deltaTime, SCREEN_HEIGHT, player.x);
-      }
-    }
-
-    for (int i = 0; i < MAX_BULLETS; i++) {
-      if (bullets[i].active) {
-        for (int j = 0; j < MAX_ENEMIES; j++) {
-          if (enemies[j].active) {
-            if (check_collision(bullets[i].x, bullets[i].y, bullets[i].width,
-                                bullets[i].height, enemies[j].x, enemies[j].y,
-                                enemies[j].width, enemies[j].height)) {
-              const BacteriaDefinition *def =
-                  get_bacteria_def(enemies[j].species);
-              bool effective = (bullets[i].type == AMMO_PCN &&
-                                def->gram_type == GRAM_POSITIVE) ||
-                               (bullets[i].type == AMMO_POLYMYXIN &&
-                                def->gram_type == GRAM_NEGATIVE);
-              if (effective) {
-                enemies[j].active = false;
-              }
-              bullets[i].active = false;
-              break;
-            }
-          }
-        }
-      }
-    }
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-
-    SDL_Rect playerRect = {(int)player.x, (int)player.y, player.width,
-                           player.height};
-
-    if (player.current_ammo == AMMO_PCN) {
-      SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    } else {
-      SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-    }
-    SDL_RenderFillRect(renderer, &playerRect);
-
-    for (int i = 0; i < MAX_BULLETS; i++) {
-      if (bullets[i].active) {
-        SDL_Rect bulletRect = {(int)bullets[i].x, (int)bullets[i].y,
-                               bullets[i].width, bullets[i].height};
-        if (bullets[i].type == AMMO_PCN) {
-          SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-        } else {
-          SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-        }
-        SDL_RenderFillRect(renderer, &bulletRect);
-      }
-    }
-
-    for (int i = 0; i < MAX_ENEMIES; i++) {
-      if (enemies[i].active) {
-        SDL_Rect enemyRect = {(int)enemies[i].x, (int)enemies[i].y,
-                              enemies[i].width, enemies[i].height};
-        const BacteriaDefinition *def = get_bacteria_def(enemies[i].species);
-        SDL_SetRenderDrawColor(renderer, def->r, def->g, def->b, 255);
-        SDL_RenderFillRect(renderer, &enemyRect);
-      }
-    }
-
-    SDL_RenderPresent(renderer);
+    game_update(&state, deltaTime, keystate);
+    game_render(&state, renderer);
   }
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
