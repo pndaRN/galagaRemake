@@ -1,5 +1,6 @@
 #ifndef ENEMY_H
 #define ENEMY_H
+#define MAX_ENEMIES 20
 
 #include "bacteria.h"
 #include <SDL2/SDL.h>

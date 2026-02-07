@@ -1,5 +1,6 @@
 #ifndef BULLET_H
 #define BULLET_H
+#define MAX_BULLETS 50
 
 #include <SDL2/SDL.h>
 #include <stdbool.h>

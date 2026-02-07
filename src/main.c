@@ -2,6 +2,7 @@
 #include "bullet.h"
 #include "collision.h"
 #include "enemy.h"
+#include "game.h"
 #include "player.h"
 #include "wave.h"
 
@@ -14,11 +15,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <time.h>
-
-const int SCREEN_WIDTH = 1280;
-const int SCREEN_HEIGHT = 720;
-const int MAX_BULLETS = 50;
-const int MAX_ENEMIES = 20;
 
 int main(int argc, char *argv[]) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -84,7 +80,6 @@ int main(int argc, char *argv[]) {
     lastTime = currentTime;
 
     while (SDL_PollEvent(&event)) {
-      printf("Event: %d\n", event.type);
       if (event.type == SDL_QUIT) {
         running = false;
       }
