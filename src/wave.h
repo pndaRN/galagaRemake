@@ -24,10 +24,12 @@ typedef struct {
   SDL_FPoint *formation_positions;
 
   bool is_active;
+  int screen_height, screen_width;
 } Wave;
 
 Wave wave_init(int total_enemies, float speed, SDL_FPoint p0, SDL_FPoint p1,
-               SDL_FPoint p2, SDL_FPoint p3, SDL_FPoint *formation_positions);
+               SDL_FPoint p2, SDL_FPoint p3, SDL_FPoint *formation_positions,
+               int screen_height, int screen_width);
 
 void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies);
 

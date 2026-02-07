@@ -2,7 +2,6 @@
 
 #include <SDL2/SDL.h>
 #include <stdbool.h>
-
 int main(int argc, char *argv[]) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     printf("SDL could not init! SDL_Error: %s\n", SDL_GetError());

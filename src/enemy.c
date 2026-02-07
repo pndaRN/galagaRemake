@@ -8,7 +8,7 @@
 
 Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3,
                  float speed, SDL_FPoint formation_position,
-                 BacteriaSpecies species) {
+                 BacteriaSpecies species, int screen_height, int screen_width) {
   Enemy e;
 
   e.width = 50;
@@ -33,6 +33,9 @@ Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3,
 
   e.dive_initialized = false;
   e.species = species;
+
+  e.screen_height = screen_height;
+  e.screen_width = screen_width;
 
   return e;
 }

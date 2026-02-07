@@ -30,12 +30,12 @@ typedef struct Enemy {
   SDL_FPoint formation_point;
 
   float t;
-
+  int screen_height, screen_width;
 } Enemy;
 
 Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3,
                  float speed, SDL_FPoint formation_position,
-                 BacteriaSpecies species);
+                 BacteriaSpecies species, int screen_height, int screen_width);
 
 void enemy_update(Enemy *e, float deltaTime, int screen_height, float player_x);
 

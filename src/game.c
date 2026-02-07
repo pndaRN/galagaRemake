@@ -22,8 +22,9 @@ void game_init(GameState *state) {
     formation_positions[i].y = 200.0f;
   }
 
-  state->wave = wave_init(5, 400.0f, test_path[0], test_path[1], test_path[2],
-                          test_path[3], formation_positions);
+  state->wave =
+      wave_init(5, 400.0f, test_path[0], test_path[1], test_path[2],
+                test_path[3], formation_positions, SCREEN_HEIGHT, SCREEN_WIDTH);
 
   for (int i = 0; i < MAX_BULLETS; i++) {
     state->bullets[i].active = false;

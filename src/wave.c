@@ -3,7 +3,8 @@
 #include "enemy.h"
 
 Wave wave_init(int total_enemies, float speed, SDL_FPoint p0, SDL_FPoint p1,
-               SDL_FPoint p2, SDL_FPoint p3, SDL_FPoint *formation_positions) {
+               SDL_FPoint p2, SDL_FPoint p3, SDL_FPoint *formation_positions,
+               int screen_height, int screen_width) {
   Wave w;
   w.total_enemies = total_enemies;
   w.enemy_indices = (int *)malloc(total_enemies * sizeof(int));
@@ -26,6 +27,10 @@ Wave wave_init(int total_enemies, float speed, SDL_FPoint p0, SDL_FPoint p1,
 
   w.formation_positions = formation_positions;
   w.is_active = true;
+
+  w.screen_height = screen_height;
+  w.screen_width = screen_width;
+
   return w;
 }
 
@@ -45,7 +50,8 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
         e[i] = enemy_init(w->control_points[0], w->control_points[1],
                           w->control_points[2],
                           w->formation_positions[w->spawn_count], w->speed,
-                          w->formation_positions[w->spawn_count], species);
+                          w->formation_positions[w->spawn_count], species,
+                          w->screen_height, w->screen_width);
         w->enemy_indices[w->spawn_count] = i;
         w->spawn_count += 1;
         w->spawn_timer = 0.0f;
@@ -103,8 +109,8 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
       all_dead = false;
       break;
     }
-    if (all_dead && w->spawn_count == w->total_enemies) {
-      w->is_active = false;
-    }
+  }
+  if (all_dead && w->spawn_count == w->total_enemies) {
+    w->is_active = false;
   }
 }

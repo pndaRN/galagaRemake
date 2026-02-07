@@ -18,6 +18,7 @@ typedef enum {
 typedef enum { GRAM_POSITIVE, GRAM_NEGATIVE } GramType;
 
 typedef enum { IS_BURSTING, IS_PAUSING, IS_DIVING } ScatterPhase;
+typedef enum { DASHING, PAUSING } ZigZagPhase;
 
 typedef struct {
   DiveType type;
@@ -37,8 +38,9 @@ typedef struct {
     } scatter;
     struct {
       int direction;
-      float dash_cooldown;
-      bool is_dashing;
+      float dash_cooldown, timer, speed;
+      float start_x, start_y;
+      ZigZagPhase phase;
     } zigzag;
     struct {
       SDL_FPoint control_points[4];
