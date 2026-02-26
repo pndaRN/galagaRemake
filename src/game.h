@@ -12,11 +12,19 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_render.h>
 
+typedef enum {
+STATE_MENU,
+STATE_PLAYING,
+STATE_PAUSED,
+STATE_GAME_OVER
+} GameState_Mode;
+
 typedef struct {
   Player player;
   Bullet bullets[MAX_BULLETS];
   Enemy enemies[MAX_ENEMIES];
   Wave wave;
+  GameState_Mode mode;
 
   float spawn_timer;
   int current_wave;
