@@ -37,6 +37,7 @@ void game_init(GameState *state) {
   state->spawn_timer = 0.0f;
   state->current_wave = 0;
   state->level = 1;
+  state->mode = STATE_MENU;
 
   srand(time(NULL));
 }
