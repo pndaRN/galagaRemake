@@ -114,21 +114,26 @@ static void game_handle_collisions(GameState *state) {
 
 void game_update(GameState *state, float deltaTime, const Uint8 *keystate) {
 
-  player_update(&state->player, keystate, deltaTime, SCREEN_WIDTH);
-  wave_update(&state->wave, deltaTime, state->enemies, MAX_ENEMIES);
-  for (int i = 0; i < MAX_BULLETS; i++) {
-    if (state->bullets[i].active) {
-      bullet_update(&state->bullets[i], deltaTime);
+  switch(state->mode){
+    case STATE_MENU:
+      break;
+    case STATE_PLAYING:
+      player_update(&state->player, keystate, deltaTime, SCREEN_WIDTH);
+      wave_update(&state->wave, deltaTime, state->enemies, MAX_ENEMIES);
+      for (int i = 0; i < MAX_BULLETS; i++) {
+        if (state->bullets[i].active) {
+          bullet_update(&state->bullets[i], deltaTime);
+        }
     }
-  }
 
-  for (int i = 0; i < MAX_ENEMIES; i++) {
-    if (state->enemies[i].active) {
-      enemy_update(&state->enemies[i], deltaTime, SCREEN_HEIGHT,
+    for (int i = 0; i < MAX_ENEMIES; i++) {
+      if (state->enemies[i].active) {
+        enemy_update(&state->enemies[i], deltaTime, SCREEN_HEIGHT,
                    state->player.x);
-    }
+      }
+    } 
+    game_handle_collisions(state);
   }
-  game_handle_collisions(state);
 }
 
 void game_handle_events(GameState *state, SDL_Event *event, bool *running) {
