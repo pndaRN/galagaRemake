@@ -13,10 +13,10 @@
 #include <SDL2/SDL_render.h>
 
 typedef enum {
-STATE_MENU,
-STATE_PLAYING,
-STATE_PAUSED,
-STATE_GAME_OVER
+  STATE_MENU,
+  STATE_PLAYING,
+  STATE_PAUSED,
+  STATE_GAME_OVER
 } GameState_Mode;
 
 typedef struct {
