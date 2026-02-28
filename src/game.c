@@ -1,4 +1,6 @@
 #include "game.h"
+#include "collision.h"
+#include "enemy.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_keycode.h>
@@ -157,15 +159,17 @@ static void render_game_world(const GameState *state, SDL_Renderer *renderer) {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
 
-  SDL_Rect playerRect = {(int)state->player.x, (int)state->player.y,
-                         state->player.width, state->player.height};
+  if (state->player.active) {
+    SDL_Rect playerRect = {(int)state->player.x, (int)state->player.y,
+                           state->player.width, state->player.height};
 
-  if (state->player.current_ammo == AMMO_PCN) {
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-  } else {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+    if (state->player.current_ammo == AMMO_PCN) {
+      SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    } else {
+      SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+    }
+    SDL_RenderFillRect(renderer, &playerRect);
   }
-  SDL_RenderFillRect(renderer, &playerRect);
 
   for (int i = 0; i < MAX_BULLETS; i++) {
     if (state->bullets[i].active) {
@@ -213,6 +217,19 @@ static void game_handle_collisions(GameState *state) {
             break;
           }
         }
+      }
+    }
+  }
+  for (int i = 0; i < MAX_ENEMIES; i++) {
+    if (state->enemies[i].active) {
+      if (check_collision(state->player.x, state->player.y, state->player.width,
+                          state->player.height, state->enemies[i].x,
+                          state->enemies[i].y, state->enemies[i].width,
+                          state->enemies[i].height)) {
+        state->player.active = false;
+        state->enemies[i].active = false;
+        state->mode = STATE_GAME_OVER;
+        break;
       }
     }
   }
