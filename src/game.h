@@ -15,6 +15,7 @@
 typedef enum {
   STATE_MENU,
   STATE_PLAYING,
+  STATE_LEVEL_TRANSITION,
   STATE_PAUSED,
   STATE_GAME_OVER
 } GameState_Mode;

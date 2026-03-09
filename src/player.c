@@ -25,6 +25,13 @@ Player player_create(int screen_width, int screen_height,
                                         "assets/ships/ship_pcn.png",
                                         "assets/ships/ship_pmx.png"};
 
+  const char *bullet_paths[AMMO_COUNT] = {"assets/weapons/base_shot.png",
+                                          "assets/weapons/pcn_shot.png",
+                                          "assets/weapons/pcn_shot.png"};
+
+  int bw[AMMO_COUNT] = {8, 8, 6};
+  int bh[AMMO_COUNT] = {23, 8, 23};
+
   for (int i = 0; i < AMMO_COUNT; i++) {
     SDL_Surface *surface = IMG_Load(ship_paths[i]);
     if (!surface) {
@@ -34,17 +41,15 @@ Player player_create(int screen_width, int screen_height,
       p.ship_texture[i] = SDL_CreateTextureFromSurface(renderer, surface);
       SDL_FreeSurface(surface);
     }
+    surface = IMG_Load(bullet_paths[i]);
+    if (!surface) {
+      printf("Failed to load image! IMG_Error: %s\n", IMG_GetError());
+      p.bullet_texture[i] = NULL;
+    } else {
+      p.bullet_texture[i] = SDL_CreateTextureFromSurface(renderer, surface);
+      SDL_FreeSurface(surface);
+    }
   }
-
-  SDL_Surface *surface = IMG_Load("assets/weapons/base_shot.png");
-  if (!surface) {
-    printf("Failed to load image! IMG_Error: %s\n", IMG_GetError());
-    p.bullet_texture = NULL;
-  } else {
-    p.bullet_texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_FreeSurface(surface);
-  }
-
   return p;
 }
 

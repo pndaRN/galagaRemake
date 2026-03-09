@@ -15,7 +15,8 @@ typedef struct {
   AmmoType current_ammo;
   bool active;
   SDL_Texture *ship_texture[AMMO_COUNT];
-  SDL_Texture *bullet_texture;
+  SDL_Texture *bullet_texture[AMMO_COUNT];
+  int bullet_width[AMMO_COUNT], bullet_height[AMMO_COUNT];
 } Player;
 
 Player player_create(int screen_width, int screen_height,
