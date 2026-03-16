@@ -2,6 +2,7 @@
 #define WAVE
 
 #include "enemy.h"
+#include "procedural.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_rect.h>
 #include <stdbool.h>
@@ -27,10 +28,12 @@ typedef struct {
   int screen_height, screen_width;
 } Wave;
 
-Wave wave_init(int total_enemies, float speed, SDL_FPoint p0, SDL_FPoint p1,
+Wave wave_init(WaveParams *wp, SDL_FPoint p0, SDL_FPoint p1,
                SDL_FPoint p2, SDL_FPoint p3, SDL_FPoint *formation_positions,
                int screen_height, int screen_width);
 
 void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies);
+
+void wave_free(Wave *w);
 
 #endif

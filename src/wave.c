@@ -2,20 +2,20 @@
 #include "bacteria.h"
 #include "enemy.h"
 
-Wave wave_init(int total_enemies, float speed, SDL_FPoint p0, SDL_FPoint p1,
+Wave wave_init(WaveParams *wp, SDL_FPoint p0, SDL_FPoint p1,
                SDL_FPoint p2, SDL_FPoint p3, SDL_FPoint *formation_positions,
                int screen_height, int screen_width) {
   Wave w;
-  w.total_enemies = total_enemies;
-  w.enemy_indices = (int *)malloc(total_enemies * sizeof(int));
+  w.total_enemies = wp -> total_enemies;
+  w.enemy_indices = (int *)malloc(w.total_enemies * sizeof(int));
 
-  w.speed = speed;
+  w.speed = wp -> speed;
 
   w.spawn_count = 0;
-  w.spawn_delay = 0.3f;
+  w.spawn_delay = wp -> spawn_delay;
   w.spawn_timer = 0.3f;
   w.dive_timer = 0.0;
-  w.dive_delay = 2.0;
+  w.dive_delay = wp -> dive_delay;
 
   w.formation_complete = false;
   w.formation_complete_time = 0;
@@ -113,4 +113,8 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
   if (all_dead && w->spawn_count == w->total_enemies) {
     w->is_active = false;
   }
+}
+
+void wave_free(Wave *w) {
+  free(w->enemy_indices);
 }
