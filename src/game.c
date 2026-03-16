@@ -29,8 +29,16 @@ void game_init(GameState *state, SDL_Renderer *renderer) {
     formation_positions[i].y = 200.0f;
   }
 
+  WaveParams wp = {
+    .total_enemies = 5,
+    .max_simult_divers = 1,
+    .speed = 400.0f,
+    .spawn_delay = 0.3f,
+    .dive_delay = 2.0f
+  };
+
   state->wave =
-      wave_init(5, 400.0f, test_path[0], test_path[1], test_path[2],
+      wave_init(&wp, test_path[0], test_path[1], test_path[2],
                 test_path[3], formation_positions, SCREEN_HEIGHT, SCREEN_WIDTH);
 
   for (int i = 0; i < MAX_BULLETS; i++) {
