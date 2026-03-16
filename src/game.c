@@ -201,15 +201,12 @@ static void game_handle_collisions(GameState *state) {
                               state->enemies[j].height)) {
             const BacteriaDefinition *def =
                 get_bacteria_def(state->enemies[j].species);
-            bool effective = (state->bullets[i].type == AMMO_PCN &&
-                              def->gram_type == GRAM_POSITIVE) ||
-                             (state->bullets[i].type == AMMO_POLYMYXIN &&
-                              def->gram_type == GRAM_NEGATIVE);
+            bool effective = (state->bullets[i].type == def->weakness);
             if (effective) {
               state->enemies[j].health -= 6;
             } else if (state->bullets[i].type == AMMO_NEUTRAL) {
               state->enemies[j].health -= 3;
-            } else if (!effective) {
+            } else {
               state->enemies[j].health -= 2;
             }
             if (state->enemies[j].health <= 0) {

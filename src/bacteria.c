@@ -169,13 +169,13 @@ void pseudomonas_dive_update(Enemy *e, float deltaTime, int screen_height,
 }
 
 static const BacteriaDefinition BACTERIA_DEFS[] = {
-    {SPECIES_STREPTOCOCCUS, GRAM_POSITIVE, DIVE_SINE, strep_dive_init,
+    {SPECIES_STREPTOCOCCUS, AMMO_PCN, DIVE_SINE, strep_dive_init,
      strep_dive_update, 0, 200, 0},
-    {SPECIES_STAPHYLOCOCCUS, GRAM_POSITIVE, DIVE_SCATTER, staph_dive_init,
+    {SPECIES_STAPHYLOCOCCUS, AMMO_PCN, DIVE_SCATTER, staph_dive_init,
      staph_dive_update, 150, 200, 0},
-    {SPECIES_ECOLI, GRAM_NEGATIVE, DIVE_ZIGZAG, ecoli_dive_init,
+    {SPECIES_ECOLI, AMMO_POLYMYXIN, DIVE_ZIGZAG, ecoli_dive_init,
      ecoli_dive_update, 0, 100, 200},
-    {SPECIES_PSEUDOMONAS, GRAM_NEGATIVE, DIVE_SWEEP, pseudomonas_dive_init,
+    {SPECIES_PSEUDOMONAS, AMMO_POLYMYXIN, DIVE_SWEEP, pseudomonas_dive_init,
      pseudomonas_dive_update, 0, 200, 200}};
 
 const BacteriaDefinition *get_bacteria_def(BacteriaSpecies species) {
