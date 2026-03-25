@@ -12,14 +12,12 @@
 static void game_handle_collisions(GameState *state);
 static void render_game_world(const GameState *state, SDL_Renderer *renderer);
 
-
-
 void game_init(GameState *state, SDL_Renderer *renderer) {
   state->player = player_create(SCREEN_WIDTH, SCREEN_HEIGHT, renderer);
 
   state->wave =
-      wave_init(&wp, test_path[0], test_path[1], test_path[2],
-                test_path[3], formation_positions, SCREEN_HEIGHT, SCREEN_WIDTH);
+      wave_init(&wp, test_path[0], test_path[1], test_path[2], test_path[3],
+                formation_positions, SCREEN_HEIGHT, SCREEN_WIDTH);
 
   for (int i = 0; i < MAX_BULLETS; i++) {
     state->bullets[i].active = false;
@@ -113,11 +111,11 @@ void game_handle_events(GameState *state, SDL_Event *event, bool *running) {
       }
       if (event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_e) {
         state->player.current_ammo =
-            (state->player.current_ammo + 1) % AMMO_COUNT;
+            (state->player.current_ammo + 1) % WEAPON_COUNT;
       }
       if (event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_q) {
         state->player.current_ammo =
-            (state->player.current_ammo + AMMO_COUNT - 1) % AMMO_COUNT;
+            (state->player.current_ammo + WEAPON_COUNT - 1) % WEAPON_COUNT;
       }
       if (event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_ESCAPE) {
         state->mode = STATE_PAUSED;
@@ -188,13 +186,13 @@ static void game_handle_collisions(GameState *state) {
                               state->enemies[j].height)) {
             const BacteriaDefinition *def =
                 get_bacteria_def(state->enemies[j].species);
-            bool effective = (state->bullets[i].type == def->weakness);
-            if (effective) {
-              state->enemies[j].health -= 6;
-            } else if (state->bullets[i].type == AMMO_NEUTRAL) {
-              state->enemies[j].health -= 3;
+            const WeaponDefinition *wdef =
+                get_weapon_def(state->bullets[i].type);
+            if (wdef->effectiveness == def->gram_type ||
+                wdef->effectiveness == GRAM_BOTH) {
+              state->enemies[j].health -= wdef->damage_effective;
             } else {
-              state->enemies[j].health -= 2;
+              state->enemies[j].health -= wdef->damage_ineffective;
             }
             if (state->enemies[j].health <= 0) {
               state->enemies[j].active = false;

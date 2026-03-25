@@ -11,7 +11,7 @@ typedef struct {
   float x, y, speed;
   int width, height;
   bool active;
-  AmmoType type;
+  WeaponType type;
   SDL_Texture *texture;
 } Bullet;
 

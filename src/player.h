@@ -4,7 +4,7 @@
 #include <SDL2/SDL_render.h>
 #include <stdbool.h>
 
-typedef enum { AMMO_NEUTRAL, AMMO_PCN, AMMO_POLYMYXIN, AMMO_COUNT } AmmoType;
+#include "weapon.h"
 
 typedef struct {
   float x, y;
@@ -12,11 +12,10 @@ typedef struct {
   int hb_offset_x, hb_offset_y;
   int hb_width, hb_height;
   float speed;
-  AmmoType current_ammo;
   bool active;
-  SDL_Texture *ship_texture[AMMO_COUNT];
-  SDL_Texture *bullet_texture[AMMO_COUNT];
-  int bullet_width[AMMO_COUNT], bullet_height[AMMO_COUNT];
+  WeaponType current_ammo;
+  SDL_Texture *ship_texture[WEAPON_COUNT];
+  SDL_Texture *bullet_texture[WEAPON_COUNT];
 } Player;
 
 Player player_create(int screen_width, int screen_height,
