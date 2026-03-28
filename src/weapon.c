@@ -27,3 +27,13 @@ static const WeaponDefinition WEAPON_DEFS[] = {
 const WeaponDefinition *get_weapon_def(WeaponType type) {
   return &WEAPON_DEFS[type];
 }
+
+int calculate_damage(const WeaponDefinition *weapon, const BacteriaDefinition *bacteria) {
+    if(weapon->type == WEAPON_NEUTRAL) {
+        return weapon->damage_neutral;
+    }
+    if(weapon->type == bacteria->weakness) {
+        return weapon->damage_effective;
+    }
+    return weapon->damage_ineffective;
+}

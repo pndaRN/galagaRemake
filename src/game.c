@@ -189,15 +189,9 @@ static void game_handle_collisions(GameState *state) {
                 get_bacteria_def(state->enemies[j].species);
             const WeaponDefinition *weapon_def =
                 get_weapon_def(state->bullets[i].type);
-            if (weapon_def->type == WEAPON_NEUTRAL) {
-              state->enemies[j].health -= weapon_def->damage_neutral;
-            } else if (weapon_def->type == bacteria_def->weakness) {
-              state->enemies[j].health -= weapon_def->damage_effective;
-            } else {
-              state->enemies[j].health -= weapon_def->damage_ineffective;
-            }
+            state->enemies[j].health -= calculate_damage(bacteria_def, weapon_def);
             if (state->enemies[j].health <= 0) {
-              state->enemies[j].active = false;
+              state->enemies[j].is_active = false;
             }
             state->bullets[i].active = false;
             break;
