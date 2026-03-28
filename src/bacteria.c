@@ -169,14 +169,62 @@ void pseudomonas_dive_update(Enemy *e, float deltaTime, int screen_height,
 }
 
 static const BacteriaDefinition BACTERIA_DEFS[] = {
-    {SPECIES_STREPTOCOCCUS, AMMO_PCN, DIVE_SINE, strep_dive_init,
-     strep_dive_update, 0, 200, 0},
-    {SPECIES_STAPHYLOCOCCUS, AMMO_PCN, DIVE_SCATTER, staph_dive_init,
-     staph_dive_update, 150, 200, 0},
-    {SPECIES_ECOLI, AMMO_POLYMYXIN, DIVE_ZIGZAG, ecoli_dive_init,
-     ecoli_dive_update, 0, 100, 200},
-    {SPECIES_PSEUDOMONAS, AMMO_POLYMYXIN, DIVE_SWEEP, pseudomonas_dive_init,
-     pseudomonas_dive_update, 0, 200, 200}};
+    { .species = SPECIES_STREPTOCOCCUS, 
+      .weakness = AMMO_PCN, 
+      .dive_type = DIVE_SINE, 
+      .dive_init = strep_dive_init,
+      .dive_update = strep_dive_update, 
+      .r = 0, 
+      .g = 200, 
+      .b = 0, 
+      .health = 6 , 
+      .base_speed = 400.0f, 
+      .width = 50, 
+      .height = 50
+    },
+
+    { .species = SPECIES_STAPHYLOCOCCUS, 
+      .weakness = AMMO_PCN, 
+      .dive_type = DIVE_SCATTER, 
+      .dive_init = staph_dive_init,
+      .dive_update = staph_dive_update, 
+      .r = 150, 
+      .g = 200, 
+      .b = 0, 
+      .health = 6, 
+      .base_speed = 300.0f, 
+      .width = 50, 
+      .height = 50
+    },
+
+    { .species = SPECIES_ECOLI, 
+      .weakness = AMMO_POLYMYXIN, 
+      .dive_type = DIVE_ZIGZAG, 
+      .dive_init = ecoli_dive_init,
+      .dive_update = ecoli_dive_update, 
+      .r = 0, 
+      .g = 100, 
+      .b = 200, 
+      .health = 6, 
+      .base_speed = 500.0f, 
+      .width = 50, 
+      .height = 50
+    },
+
+    { .species = SPECIES_PSEUDOMONAS, 
+      .weakness = AMMO_POLYMYXIN, 
+      .dive_type = DIVE_SWEEP, 
+      .dive_init = pseudomonas_dive_init,
+      .dive_update = pseudomonas_dive_update, 
+      .r = 0, 
+      .g = 200, 
+      .b = 200, 
+      .health = 6, 
+      .base_speed = 400.0f, 
+      .width = 50, 
+      .height = 50
+    }
+  };
 
 const BacteriaDefinition *get_bacteria_def(BacteriaSpecies species) {
   return &BACTERIA_DEFS[species];
