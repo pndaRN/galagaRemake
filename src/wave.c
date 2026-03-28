@@ -49,7 +49,7 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
         BacteriaSpecies species = (BacteriaSpecies)(w->spawn_count % 4);
         e[i] = enemy_init(w->control_points[0], w->control_points[1],
                           w->control_points[2],
-                          w->formation_positions[w->spawn_count],
+                          w->control_points[3],
                           w->formation_positions[w->spawn_count], species,
                           w->screen_height, w->screen_width);
         w->enemy_indices[w->spawn_count] = i;
