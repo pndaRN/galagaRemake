@@ -2,16 +2,16 @@
 #include "bacteria.h"
 #include "enemy.h"
 
-Wave wave_init(WaveParams *wp, SDL_FPoint p0, SDL_FPoint p1,
-               SDL_FPoint p2, SDL_FPoint p3, SDL_FPoint *formation_positions,
+Wave wave_init(WaveParams *wp, SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2,
+               SDL_FPoint p3, SDL_FPoint *formation_positions,
                int screen_height, int screen_width) {
   Wave w;
-  w.total_enemies = wp -> total_enemies;
+  w.total_enemies = wp->total_enemies;
   w.enemy_indices = (int *)malloc(w.total_enemies * sizeof(int));
 
-  w.spawn_delay = wp -> spawn_delay;
-  w.dive_delay = wp -> dive_delay;
-  w.threshold = wp -> threshold;
+  w.spawn_delay = wp->spawn_delay;
+  w.dive_delay = wp->dive_delay;
+  w.threshold = wp->threshold;
   w.threshold_crossed = false;
 
   w.spawn_count = 0;
@@ -25,7 +25,10 @@ Wave wave_init(WaveParams *wp, SDL_FPoint p0, SDL_FPoint p1,
   w.control_points[2] = p2;
   w.control_points[3] = p3;
 
-  w.formation_positions = formation_positions;
+  w.formation_positions =
+      (SDL_FPoint *)malloc(w.total_enemies * sizeof(SDL_FPoint));
+  memcpy(w.formation_positions, formation_positions,
+         w.total_enemies * sizeof(SDL_FPoint));
   w.is_active = true;
 
   w.screen_height = screen_height;
@@ -49,7 +52,7 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
         BacteriaSpecies species = (BacteriaSpecies)(w->spawn_count % 4);
         e[i] = enemy_init(w->control_points[0], w->control_points[1],
                           w->control_points[2],
-                          w->control_points[3],
+                          w->formation_positions[w->spawn_count],
                           w->formation_positions[w->spawn_count], species,
                           w->screen_height, w->screen_width);
         w->enemy_indices[w->spawn_count] = i;
@@ -111,10 +114,10 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
     }
   }
   all_dead = active_count == 0;
-  int killed = w->total_enemies -active_count;
+  int killed = w->total_enemies - active_count;
   float percentage_killed = (float)killed / w->total_enemies;
   if (percentage_killed >= w->threshold) {
-    w->threshold_crossed = true; 
+    w->threshold_crossed = true;
   }
   if (all_dead && w->spawn_count == w->total_enemies) {
     w->is_active = false;
@@ -123,4 +126,5 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
 
 void wave_free(Wave *w) {
   free(w->enemy_indices);
+  free(w->formation_positions);
 }
