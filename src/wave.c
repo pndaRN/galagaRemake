@@ -10,6 +10,7 @@ Wave wave_init(WaveParams *wp, SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2,
   w.enemy_indices = (int *)malloc(w.total_enemies * sizeof(int));
 
   w.spawn_delay = wp->spawn_delay;
+  w.species_unlocked = wp->species_unlocked;
   w.dive_delay = wp->dive_delay;
   w.threshold = wp->threshold;
   w.threshold_crossed = false;
@@ -49,7 +50,8 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
   if (w->spawn_timer >= w->spawn_delay && w->spawn_count < w->total_enemies) {
     for (int i = 0; i < max_enemies; i++) {
       if (!e[i].active) {
-        BacteriaSpecies species = (BacteriaSpecies)(w->spawn_count % 4);
+        BacteriaSpecies species =
+            (BacteriaSpecies)(w->spawn_count % w->species_unlocked);
         e[i] = enemy_init(w->control_points[0], w->control_points[1],
                           w->control_points[2],
                           w->formation_positions[w->spawn_count],

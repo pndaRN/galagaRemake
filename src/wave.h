@@ -9,7 +9,7 @@
 
 typedef struct {
   int total_enemies;
-  int spawn_count;
+  int spawn_count, species_unlocked;
   float threshold;
   float spawn_delay, spawn_timer;
   float dive_delay, dive_timer;

@@ -6,8 +6,9 @@
 #include <math.h>
 // #include <stdlib.h>
 
-Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3, SDL_FPoint formation_position,
-                 BacteriaSpecies species, int screen_height, int screen_width) {
+Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3,
+                 SDL_FPoint formation_position, BacteriaSpecies species,
+                 int screen_height, int screen_width) {
   Enemy e;
 
   const BacteriaDefinition *bacteria_def = get_bacteria_def(species);
@@ -15,7 +16,8 @@ Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3, SDL
   e.width = bacteria_def->width;
   e.height = bacteria_def->height;
   e.health = bacteria_def->health;
-  e.speed = bacteria_def->base_speed * 1.0f; // TODO: Multiply by wp->speed_scalar
+  e.speed =
+      bacteria_def->base_speed * 1.0f; // TODO: Multiply by wp->speed_scalar
   e.active = true;
 
   e.state_start_time = 0;
