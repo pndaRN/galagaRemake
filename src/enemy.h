@@ -16,7 +16,7 @@ typedef enum {
 } EnemyState;
 
 typedef struct Enemy {
-  float x, y, speed;
+  float x, y, speed, speed_scalar;
   int width, height, health;
   bool active;
   Uint64 state_start_time;
@@ -33,9 +33,9 @@ typedef struct Enemy {
   int screen_height, screen_width;
 } Enemy;
 
-Enemy enemy_init(SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2, SDL_FPoint p3,
-                 SDL_FPoint formation_position, BacteriaSpecies species,
-                 int screen_height, int screen_width);
+Enemy enemy_init(float speed_scalar, SDL_FPoint p0, SDL_FPoint p1,
+                 SDL_FPoint p2, SDL_FPoint p3, SDL_FPoint formation_position,
+                 BacteriaSpecies species, int screen_height, int screen_width);
 
 void enemy_update(Enemy *e, float deltaTime, int screen_height, float player_x);
 
