@@ -29,7 +29,7 @@ Level level_init(int level, int screen_height, int screen_width) {
     l.formation_positions[i].y = 200.0f;
   }
 
-  l.wave[0] = wave_init(&wp, l.p0, l.p1, l.p2, l.p3, l.formation_positions,
+  l.wave[0] = wave_init(&wp, l.p0, l.p1, l.p2, l.formation_positions,
                         screen_height, screen_width);
 
   return l;
@@ -48,9 +48,9 @@ void level_update(Level *l, float deltaTime, Enemy *e, int max_enemies) {
         } else {
           for (int j = 0; j < MAX_WAVES; j++) {
             if (!l->wave[j].is_active) {
-              l->wave[j] = wave_init(&wp, l->p0, l->p1, l->p2, l->p3,
-                                     l->formation_positions, l->screen_height,
-                                     l->screen_width);
+              l->wave[j] =
+                  wave_init(&wp, l->p0, l->p1, l->p2, l->formation_positions,
+                            l->screen_height, l->screen_width);
               l->wave_count++;
               break;
             }
