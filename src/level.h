@@ -14,7 +14,7 @@ typedef struct {
   // Temp vars until procgen is done
   int screen_height, screen_width;
   SDL_FPoint p0, p1, p2, p3;
-  SDL_FPoint formation_positions[5];
+  SDL_FPoint *formation_positions;
 
 } Level;
 

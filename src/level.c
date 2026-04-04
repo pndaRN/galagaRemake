@@ -24,7 +24,10 @@ Level level_init(int level, int screen_height, int screen_width) {
   l.p2 = (SDL_FPoint){900, 150};
   l.p3 = (SDL_FPoint){640, 200};
 
-  for (int i = 0; i < 5; i++) {
+  l.formation_positions =
+      (SDL_FPoint *)malloc(wp.total_enemies * sizeof(SDL_FPoint));
+
+  for (int i = 0; i < wp.total_enemies; i++) {
     l.formation_positions[i].x = (screen_width / 6.0f) * (i + 1);
     l.formation_positions[i].y = 200.0f;
   }
