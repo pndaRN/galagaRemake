@@ -56,6 +56,17 @@ void game_update(GameState *state, float deltaTime, const Uint8 *keystate) {
   case STATE_PLAYING:
     player_update(&state->player, keystate, deltaTime, SCREEN_WIDTH);
     level_update(&state->level, deltaTime, state->enemies, MAX_ENEMIES);
+    if (state->level.level_end == true) {
+      int new_level = state->level.level + 1;
+      level_free(&state->level);
+      state-> level = level_init(new_level,SCREEN_HEIGHT, SCREEN_WIDTH);
+      for (int i = 0; i < MAX_ENEMIES; i++) {
+        state->enemies[i].active = false;
+      }
+      for (int i = 0; i < MAX_BULLETS; i++) {
+        state->bullets[i].active = false;
+      }
+    }
     for (int i = 0; i < MAX_BULLETS; i++) {
       if (state->bullets[i].active) {
         bullet_update(&state->bullets[i], deltaTime);
