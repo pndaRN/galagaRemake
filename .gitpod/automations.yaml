@@ -1,0 +1,15 @@
+services:
+  display:
+    name: Virtual Display + noVNC
+    description: Starts Xvfb, x11vnc, and noVNC so the game can be viewed in a browser
+    commands:
+      start: |
+        mkdir -p /tmp/runtime-dir && chmod 700 /tmp/runtime-dir
+        Xvfb :99 -screen 0 1280x720x24 -nolisten tcp &
+        sleep 1
+        x11vnc -display :99 -nopw -listen localhost -xkb -forever -shared -repeat &
+        sleep 1
+        websockify --web /usr/share/novnc 6080 localhost:5900
+      stop: pkill -f "Xvfb|x11vnc|websockify" || true
+    ready: |
+      curl -sf http://localhost:6080 > /dev/null
