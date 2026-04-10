@@ -2,3 +2,4 @@ game
 assets/
 core
 core.*
+.vscode/
