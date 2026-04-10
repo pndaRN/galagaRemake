@@ -3,6 +3,7 @@
 #define MAX_ENEMIES 20
 
 #include "bacteria.h"
+#include "procedural.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_rect.h>
 #include <math.h>
@@ -15,6 +16,7 @@ typedef enum {
   ENEMY_RETURNING
 } EnemyState;
 
+
 typedef struct Enemy {
   float x, y, speed, speed_scalar;
   int width, height, health;
@@ -26,15 +28,16 @@ typedef struct Enemy {
   DiveState dive_state;
   bool dive_initialized;
 
-  SDL_FPoint control_points[4];
+  EntryPathData entry_path;
+  int current_segment;
+
   SDL_FPoint formation_point;
 
   float t;
   int screen_height, screen_width;
 } Enemy;
 
-Enemy enemy_init(float speed_scalar, SDL_FPoint p0, SDL_FPoint p1,
-                 SDL_FPoint p2, SDL_FPoint p3, SDL_FPoint formation_position,
+Enemy enemy_init(float speed_scalar, EntryPathData path_data, SDL_FPoint formation_position,
                  BacteriaSpecies species, int screen_height, int screen_width);
 
 void enemy_update(Enemy *e, float deltaTime, int screen_height, float player_x);
