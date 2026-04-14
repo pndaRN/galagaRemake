@@ -8,8 +8,10 @@
 #include <stdbool.h>
 
 typedef struct {
+  int level;
   int total_enemies;
   int spawn_count, species_unlocked;
+  PathType path;
   float threshold;
   float spawn_delay, spawn_timer;
   float dive_delay, dive_timer;

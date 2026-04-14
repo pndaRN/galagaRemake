@@ -13,6 +13,7 @@ Level level_init(int level, int screen_height, int screen_width) {
   for (int i = 0; i < MAX_WAVES; i++) {
     l.wave[i].is_active = false;
     l.wave[i].enemy_indices = NULL;
+    l.wave[i].formation_positions = NULL;
   }
 
   WaveParams wp = level_to_params(l.level);

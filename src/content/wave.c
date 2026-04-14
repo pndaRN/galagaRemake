@@ -6,6 +6,7 @@ Wave wave_init(WaveParams *wp, SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2,
                SDL_FPoint *formation_positions, int screen_height,
                int screen_width) {
   Wave w;
+  w.level = wp->level;
   w.total_enemies = wp->total_enemies;
   w.enemy_indices = (int *)malloc(w.total_enemies * sizeof(int));
 
@@ -18,6 +19,7 @@ Wave wave_init(WaveParams *wp, SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2,
 
   w.spawn_count = 0;
   w.spawn_timer = 0.3f;
+  w.path = wp->path_type;
   w.dive_timer = 0.0;
   w.formation_complete = false;
   w.formation_complete_time = 0;
@@ -52,9 +54,12 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
       if (!e[i].active) {
         BacteriaSpecies species =
             (BacteriaSpecies)(w->spawn_count % w->species_unlocked);
-        e[i] = enemy_init(w->speed_scalar, w->control_points[0],
-                          w->control_points[1], w->control_points[2],
-                          w->formation_positions[w->spawn_count],
+        SDL_FPoint spawn_point =
+            generate_spawn_point(w->level, w->screen_width, w->screen_height);
+        EntryPathData path_data =
+            generate_path(w->path, w->screen_height, w->screen_width,
+                          spawn_point, w->formation_positions[w->spawn_count]);
+        e[i] = enemy_init(w->speed_scalar, path_data,
                           w->formation_positions[w->spawn_count], species,
                           w->screen_height, w->screen_width);
         w->enemy_indices[w->spawn_count] = i;

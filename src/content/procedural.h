@@ -21,8 +21,9 @@ typedef enum {
 } PathType;
 
 typedef struct {
-  int total_enemies, max_simult_divers, species_unlocked;
+  int total_enemies, max_simult_divers, species_unlocked, level;
   float speed_scalar, spawn_delay, dive_delay, threshold;
+  PathType path_type;
 } WaveParams;
 
 typedef struct {
@@ -35,12 +36,20 @@ typedef struct {
   int num_segments;
 } EntryPathData;
 
+typedef struct {
+
+  float x, y;
+} SpawnPointFraction;
+
 WaveParams level_to_params(int level);
 
 void generate_formation(SDL_FPoint *positions, int total_enemies,
                         int screen_width, int screen_height,
                         FormationType type);
 
-EntryPathData generate_path(PathType type, int screen_height, int screen_width, SDL_FPoint start, SDL_FPoint end);
+EntryPathData generate_path(PathType type, int screen_height, int screen_width,
+                            SDL_FPoint start, SDL_FPoint end);
+
+SDL_FPoint generate_spawn_point(int level, int screen_width, int screen_height);
 
 #endif

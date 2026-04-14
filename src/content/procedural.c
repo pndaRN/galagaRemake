@@ -3,6 +3,7 @@
 
 WaveParams level_to_params(int level) {
   WaveParams wp;
+  wp.level = level;
 
   int block_position = (level - 1) % 5 + 1;
 
@@ -13,7 +14,7 @@ WaveParams level_to_params(int level) {
   wp.spawn_delay = 0.3f;
   wp.dive_delay = 2.0f / (block_position * 0.5 + 0.5);
   wp.threshold = .8;
-
+  wp.path_type = PATH_ARC;
   return wp;
 }
 
@@ -108,6 +109,27 @@ EntryPathData generate_path(PathType type, int screen_height, int screen_width,
     break;
   }
   return path;
+}
+
+static const SpawnPointFraction SPAWN_POINT_FACTIONS[] = {
+    {.x = 0.17f, .y = -0.07f}, {.x = 0.33f, .y = -0.07f},
+    {.x = 0.5f, .y = -0.07f},  {.x = 0.67f, .y = -0.07f},
+    {.x = 0.83f, .y = -0.07f}, {.x = -0.07f, .y = 0.17f},
+    {.x = -0.07f, .y = 0.33f}, {.x = 1.07f, .y = 0.17f},
+    {.x = 1.07f, .y = 0.33f},
+};
+
+SDL_FPoint generate_spawn_point(int level, int screen_width,
+                                int screen_height) {
+  SDL_FPoint point;
+  if (level <= 5) {
+    point.x = screen_width * SPAWN_POINT_FACTIONS[2].x;
+    point.y = screen_height * SPAWN_POINT_FACTIONS[2].y;
+  } else { // TODO: INIT LEVEL > 5
+    point.x = screen_width * SPAWN_POINT_FACTIONS[2].x;
+    point.y = screen_height * SPAWN_POINT_FACTIONS[2].y;
+  }
+  return point;
 }
 
 static const FormationDefinition FORMATION_DEFS[] = {
