@@ -1,14 +1,15 @@
 #include "enemy.h"
 #include "bacteria.h"
 #include "math_utils.h"
+#include "procedural.h"
 
 #include <SDL2/SDL_rect.h>
 #include <math.h>
 // #include <stdlib.h>
 
-Enemy enemy_init(float speed_scalar, SDL_FPoint p0, SDL_FPoint p1,
-                 SDL_FPoint p2, SDL_FPoint p3, SDL_FPoint formation_position,
-                 BacteriaSpecies species, int screen_height, int screen_width) {
+Enemy enemy_init(float speed_scalar, EntryPathData path_data,
+                 SDL_FPoint formation_position, BacteriaSpecies species,
+                 int screen_height, int screen_width) {
   Enemy e;
 
   const BacteriaDefinition *bacteria_def = get_bacteria_def(species);
@@ -24,15 +25,8 @@ Enemy enemy_init(float speed_scalar, SDL_FPoint p0, SDL_FPoint p1,
 
   e.state = ENEMY_ENTERING;
 
-  e.control_points[0] = p0;
-  e.control_points[1] = p1;
-  e.control_points[2] = p2;
-  e.control_points[3] = p3;
-
   e.t = 0.0f;
-  e.x = p0.x;
-  e.y = p0.y;
-
+  e.entry_path = path_data;
   e.formation_point = formation_position;
 
   e.dive_initialized = false;
@@ -53,9 +47,9 @@ void enemy_update(Enemy *e, float deltaTime, int screen_height,
   case ENEMY_ENTERING: {
 
     e->t += deltaTime / 3.0f;
-    SDL_FPoint pos =
-        bezier_point(e->control_points[0], e->control_points[1],
-                     e->control_points[2], e->control_points[3], e->t);
+    SDL_FPoint pos = bezier_point(
+        e->entry_path.control_points[0], e->entry_path.control_points[1],
+        e->entry_path.control_points[2], e->entry_path.control_points[3], e->t);
 
     e->x = pos.x;
     e->y = pos.y;
@@ -96,31 +90,37 @@ void enemy_update(Enemy *e, float deltaTime, int screen_height,
 
   case ENEMY_RETURNING:
     if (!e->dive_initialized) {
-      e->control_points[0].x = e->x;
-      e->control_points[0].y = 0 - e->height;
-      e->control_points[3].x = e->formation_point.x;
-      e->control_points[3].y = e->formation_point.y;
+      e->entry_path.control_points[0].x = e->x;
+      e->entry_path.control_points[0].y = e->y;
+      e->entry_path.control_points[3].x = e->formation_point.x;
+      e->entry_path.control_points[3].y = e->formation_point.y;
 
-      float dx = e->control_points[3].x - e->control_points[0].x;
-      float dy = e->control_points[3].y - e->control_points[0].y;
+      float dx =
+          e->entry_path.control_points[3].x - e->entry_path.control_points[0].x;
+      float dy =
+          e->entry_path.control_points[3].y - e->entry_path.control_points[0].y;
 
-      e->control_points[1].x = e->control_points[0].x + dx * (1.0f / 3.0f);
-      e->control_points[1].y = e->control_points[0].y + dy * (1.0f / 3.0f);
+      e->entry_path.control_points[1].x =
+          e->entry_path.control_points[0].x + dx * (1.0f / 3.0f);
+      e->entry_path.control_points[1].y =
+          e->entry_path.control_points[0].y + dy * (1.0f / 3.0f);
 
-      e->control_points[2].x = e->control_points[0].x + dx * (2.0f / 3.0f);
-      e->control_points[2].y = e->control_points[0].y + dy * (2.0f / 3.0f);
+      e->entry_path.control_points[2].x =
+          e->entry_path.control_points[0].x + dx * (2.0f / 3.0f);
+      e->entry_path.control_points[2].y =
+          e->entry_path.control_points[0].y + dy * (2.0f / 3.0f);
 
       float offset = (e->x > e->screen_width / 2.0f) ? -150.0f : 150.0f;
-      e->control_points[1].x += offset;
-      e->control_points[2].x += offset;
+      e->entry_path.control_points[1].x += offset;
+      e->entry_path.control_points[2].x += offset;
 
       e->t = 0.0f;
       e->dive_initialized = true;
     }
     e->t += deltaTime / 2.0f;
-    SDL_FPoint pos =
-        bezier_point(e->control_points[0], e->control_points[1],
-                     e->control_points[2], e->control_points[3], e->t);
+    SDL_FPoint pos = bezier_point(
+        e->entry_path.control_points[0], e->entry_path.control_points[1],
+        e->entry_path.control_points[2], e->entry_path.control_points[3], e->t);
 
     e->x = pos.x;
     e->y = pos.y;

@@ -34,65 +34,81 @@ void generate_formation(SDL_FPoint *positions, int total_enemies,
       positions[i].y = 100.0f + 100.0f * abs(i - middle) / (float)middle;
     }
     break;
+  case FORMATION_TYPE_CIRCLE:
+    break;
+    // TODO
+  case FORMATION_TYPE_DIAMOND:
+    break;
+    // TODO
+  case FORMATION_TYPE_HEXAGON:
+    break;
+    // TODO
+  case FORMATION_TYPE_STAGGER:
+    break;
   }
 }
 
-
-
-EntryPathData generate_path(PathType type, int screen_height, int screen_width, SDL_FPoint start, SDL_FPoint end) {
+EntryPathData generate_path(PathType type, int screen_height, int screen_width,
+                            SDL_FPoint start, SDL_FPoint end) {
   EntryPathData path;
   path.num_segments = 0;
   float dx, dy;
   float offset;
 
   switch (type) {
+  case PATH_ARC:
+    path.control_points[0] = start;
+    path.control_points[3] = end;
 
-    case PATH_ARC:
-      path.control_points[0] = start;
-      path.control_points[3] = end;
+    dx = end.x - start.x;
+    dy = end.y - start.y;
 
-      dx = end.x - start.x;
-      dy = end.y - start.y;
-      
-      path.control_points[1].x = start.x + dx * (1.0f / 3.0f);
-      path.control_points[1].y = start.y + dy * (1.0f / 3.0f);
+    path.control_points[1].x = start.x + dx * (1.0f / 3.0f);
+    path.control_points[1].y = start.y + dy * (1.0f / 3.0f);
 
-      path.control_points[2].x = start.x + dx * (2.0f / 3.0f);
-      path.control_points[2].y = start.y + dy * (2.0f / 3.0f);
+    path.control_points[2].x = start.x + dx * (2.0f / 3.0f);
+    path.control_points[2].y = start.y + dy * (2.0f / 3.0f);
 
-      offset = (start.x > screen_width / 2.0f) ? -screen_width * 0.12f : screen_width * 0.12f;  
-      path.control_points[1].x += offset;
-      path.control_points[2].x += offset;
+    offset = (start.x > screen_width / 2.0f) ? -screen_width * 0.12f
+                                             : screen_width * 0.12f;
+    path.control_points[1].x += offset;
+    path.control_points[2].x += offset;
 
-      path.num_segments = 1;
-      break;
+    path.num_segments = 1;
+    break;
 
-    case PATH_LINE_ISH:
-      path.control_points[0] = start;
-      path.control_points[3] = end;
+  case PATH_LINE_ISH:
+    path.control_points[0] = start;
+    path.control_points[3] = end;
 
-      dx = end.x - start.x;
-      dy = end.y - start.y;
-      
-      path.control_points[1].x = start.x + dx * (1.0f / 3.0f);
-      path.control_points[1].y = start.y + dy * (1.0f / 3.0f);
+    dx = end.x - start.x;
+    dy = end.y - start.y;
 
-      path.control_points[2].x = start.x + dx * (2.0f / 3.0f);
-      path.control_points[2].y = start.y + dy * (2.0f / 3.0f);
+    path.control_points[1].x = start.x + dx * (1.0f / 3.0f);
+    path.control_points[1].y = start.y + dy * (1.0f / 3.0f);
 
-      offset = (start.x > screen_width / 2.0f) ? -screen_width * 0.06f : screen_width * 0.06f;
-      path.control_points[1].x += offset;
-      path.control_points[2].x += offset;
+    path.control_points[2].x = start.x + dx * (2.0f / 3.0f);
+    path.control_points[2].y = start.y + dy * (2.0f / 3.0f);
 
-      path.num_segments = 1;
-      break;
-    }
-    case PATH_TIGHT_HOOK:
-      path.control_points[0] = start;
-      path.control_points[3] = end;
+    offset = (start.x > screen_width / 2.0f) ? -screen_width * 0.06f
+                                             : screen_width * 0.06f;
+    path.control_points[1].x += offset;
+    path.control_points[2].x += offset;
 
-      
+    path.num_segments = 1;
+    break;
+
+  case PATH_TIGHT_HOOK:
+    path.control_points[0] = start;
+    path.control_points[3] = end;
+  case PATH_WIDE_SWEEP:
+    break;
+
+  case PATH_LOOP_DE_LOOP:
+    break;
   }
+  return path;
+}
 
 static const FormationDefinition FORMATION_DEFS[] = {
     {.type = FORMATION_TYPE_LINE, .max_per_row = 7},

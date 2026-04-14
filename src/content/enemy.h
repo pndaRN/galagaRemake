@@ -16,7 +16,6 @@ typedef enum {
   ENEMY_RETURNING
 } EnemyState;
 
-
 typedef struct Enemy {
   float x, y, speed, speed_scalar;
   int width, height, health;
@@ -37,9 +36,9 @@ typedef struct Enemy {
   int screen_height, screen_width;
 } Enemy;
 
-Enemy enemy_init(float speed_scalar, EntryPathData path_data, SDL_FPoint formation_position,
-                 BacteriaSpecies species, int screen_height, int screen_width);
-
+Enemy enemy_init(float speed_scalar, EntryPathData path_data,
+                 SDL_FPoint formation_position, BacteriaSpecies species,
+                 int screen_height, int screen_width);
 void enemy_update(Enemy *e, float deltaTime, int screen_height, float player_x);
 
 #endif
