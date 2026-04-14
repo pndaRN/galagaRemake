@@ -121,10 +121,12 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
     }
   }
   all_dead = active_count == 0;
-  int killed = w->total_enemies - active_count;
-  float percentage_killed = (float)killed / w->total_enemies;
-  if (percentage_killed >= w->threshold) {
-    w->threshold_crossed = true;
+  if (w->spawn_count > 0) {
+    int killed = w->spawn_count - active_count;
+    float percentage_killed = (float)killed / w->spawn_count;
+    if (percentage_killed >= w->threshold) {
+      w->threshold_crossed = true;
+    }
   }
   if (all_dead && w->spawn_count == w->total_enemies) {
     w->is_active = false;
