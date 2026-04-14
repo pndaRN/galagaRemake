@@ -91,7 +91,7 @@ void enemy_update(Enemy *e, float deltaTime, int screen_height,
   case ENEMY_RETURNING:
     if (!e->dive_initialized) {
       e->entry_path.control_points[0].x = e->x;
-      e->entry_path.control_points[0].y = e->y;
+      e->entry_path.control_points[0].y = 0 - e->height;
       e->entry_path.control_points[3].x = e->formation_point.x;
       e->entry_path.control_points[3].y = e->formation_point.y;
 
