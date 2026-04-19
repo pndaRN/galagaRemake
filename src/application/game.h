@@ -22,7 +22,8 @@ typedef enum {
 typedef struct {
   Player player;
   Bullet bullets[MAX_BULLETS];
-  Enemy enemies[MAX_ENEMIES];
+  EnemyHot enemy_hot[MAX_ENEMIES];
+  EnemyCold enemy_cold[MAX_ENEMIES];
   Level level;
   GameState_Mode mode;
 } GameState;

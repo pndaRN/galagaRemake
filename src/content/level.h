@@ -19,6 +19,7 @@ typedef struct {
 } Level;
 
 Level level_init(int level, int screen_height, int screen_width);
-void level_update(Level *l, float deltaTime, Enemy *e, int max_enemies);
+void level_update(Level *l, float deltaTime, EnemyHot *hot, EnemyCold *cold,
+                  int max_enemies);
 
 #endif

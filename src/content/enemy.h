@@ -6,7 +6,6 @@
 #include "procedural.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_rect.h>
-#include <math.h>
 #include <stdbool.h>
 
 typedef enum {
@@ -16,29 +15,29 @@ typedef enum {
   ENEMY_RETURNING
 } EnemyState;
 
-typedef struct Enemy {
-  float x, y, speed, speed_scalar;
-  int width, height, health;
+typedef struct EnemyHot {
+  float x, y;
+  int width, height;
   bool active;
-  Uint64 state_start_time;
-  EnemyState state;
-
+  int health;
   BacteriaSpecies species;
+} EnemyHot;
+
+typedef struct EnemyCold {
+  EnemyState state;
+  Uint64 state_start_time;
+  float t, speed, speed_scalar;
   DiveState dive_state;
   bool dive_initialized;
-
   EntryPathData entry_path;
   int current_segment;
-
   SDL_FPoint formation_point;
+} EnemyCold;
 
-  float t;
-  int screen_height, screen_width;
-} Enemy;
-
-Enemy enemy_init(float speed_scalar, EntryPathData path_data,
-                 SDL_FPoint formation_position, BacteriaSpecies species,
-                 int screen_height, int screen_width);
-void enemy_update(Enemy *e, float deltaTime, int screen_height, float player_x);
+void enemy_init(EnemyHot *hot, EnemyCold *cold, float speed_scalar,
+                EntryPathData path_data, SDL_FPoint formation_position,
+                BacteriaSpecies species);
+void enemy_update(EnemyHot *hot, EnemyCold *cold, float deltaTime,
+                  int screen_height, int screen_width, float player_x);
 
 #endif

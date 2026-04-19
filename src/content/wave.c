@@ -37,7 +37,8 @@ Wave wave_init(WaveParams *wp, SDL_FPoint p0, SDL_FPoint p1, SDL_FPoint p2,
   return w;
 }
 
-void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
+void wave_update(Wave *w, float deltaTime, EnemyHot *hot, EnemyCold *cold,
+                 int max_enemies) {
   if (!w->is_active) {
     return;
   }
@@ -48,7 +49,7 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
 
   if (w->spawn_timer >= w->spawn_delay && w->spawn_count < w->total_enemies) {
     for (int i = 0; i < max_enemies; i++) {
-      if (!e[i].active) {
+      if (!hot[i].active) {
         BacteriaSpecies species =
             (BacteriaSpecies)(w->spawn_count % w->species_unlocked);
         SDL_FPoint spawn_point =
@@ -56,9 +57,9 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
         EntryPathData path_data =
             generate_path(w->path, w->screen_height, w->screen_width,
                           spawn_point, w->formation_positions[w->spawn_count]);
-        e[i] = enemy_init(w->speed_scalar, path_data,
-                          w->formation_positions[w->spawn_count], species,
-                          w->screen_height, w->screen_width);
+        enemy_init(&hot[i], &cold[i], w->speed_scalar, path_data,
+                   w->formation_positions[w->spawn_count], species);
+
         w->enemy_indices[w->spawn_count] = i;
         w->spawn_count += 1;
         w->spawn_timer = 0.0f;
@@ -72,7 +73,7 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
   if (w->spawn_count == w->total_enemies && !w->formation_complete) {
     bool all_holding = true;
     for (int i = 0; i < w->spawn_count; i++) {
-      if (e[w->enemy_indices[i]].state != ENEMY_HOLDING) {
+      if (cold[w->enemy_indices[i]].state != ENEMY_HOLDING) {
         all_holding = false;
         break;
       }
@@ -95,7 +96,7 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
 
     for (int i = 0; i < w->spawn_count; i++) {
       int idx = w->enemy_indices[i];
-      if (e[idx].active && e[idx].state == ENEMY_HOLDING) {
+      if (hot[idx].active && cold[idx].state == ENEMY_HOLDING) {
         candidates[candidates_count] = idx;
         candidates_count++;
       }
@@ -103,8 +104,8 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
     if (candidates_count > 0) {
       int pick = rand() % candidates_count;
       int rand_index = candidates[pick];
-      e[rand_index].state = ENEMY_DIVING;
-      e[rand_index].state_start_time = SDL_GetTicks64();
+      cold[rand_index].state = ENEMY_DIVING;
+      cold[rand_index].state_start_time = SDL_GetTicks64();
       w->dive_timer = 0.0f;
     }
   }
@@ -113,7 +114,7 @@ void wave_update(Wave *w, float deltaTime, Enemy *e, int max_enemies) {
   int active_count = 0;
   bool all_dead;
   for (int i = 0; i < w->spawn_count; i++) {
-    if (e[w->enemy_indices[i]].active) {
+    if (hot[w->enemy_indices[i]].active) {
       active_count++;
     }
   }

@@ -34,11 +34,12 @@ Level level_init(int level, int screen_height, int screen_width) {
   return l;
 }
 
-void level_update(Level *l, float deltaTime, Enemy *e, int max_enemies) {
+void level_update(Level *l, float deltaTime, EnemyHot *hot, EnemyCold *cold,
+                  int max_enemies) {
   WaveParams wp = level_to_params(l->level);
   for (int i = 0; i < MAX_WAVES; i++) {
     if (l->wave[i].is_active) {
-      wave_update(&l->wave[i], deltaTime, e, max_enemies);
+      wave_update(&l->wave[i], deltaTime, hot, cold, max_enemies);
       if (l->wave[i].threshold_crossed) {
         l->wave[i].threshold_crossed = false;
         float roll = (float)rand() / RAND_MAX;

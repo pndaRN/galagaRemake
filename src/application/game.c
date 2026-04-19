@@ -23,7 +23,7 @@ void game_init(GameState *state, SDL_Renderer *renderer) {
   }
 
   for (int i = 0; i < MAX_ENEMIES; i++) {
-    state->enemies[i].active = false;
+    state->enemy_hot[i].active = false;
   }
   state->mode = STATE_MENU;
 
@@ -55,12 +55,13 @@ void game_update(GameState *state, float deltaTime, const Uint8 *keystate) {
     break;
   case STATE_PLAYING:
     player_update(&state->player, keystate, deltaTime, SCREEN_WIDTH);
-    level_update(&state->level, deltaTime, state->enemies, MAX_ENEMIES);
+    level_update(&state->level, deltaTime, state->enemy_hot, state->enemy_cold,
+                 MAX_ENEMIES);
     if (state->level.level_end == true) {
       int new_level = state->level.level + 1;
       state->level = level_init(new_level, SCREEN_HEIGHT, SCREEN_WIDTH);
       for (int i = 0; i < MAX_ENEMIES; i++) {
-        state->enemies[i].active = false;
+        state->enemy_hot[i].active = false;
       }
       for (int i = 0; i < MAX_BULLETS; i++) {
         state->bullets[i].active = false;
@@ -73,9 +74,9 @@ void game_update(GameState *state, float deltaTime, const Uint8 *keystate) {
     }
 
     for (int i = 0; i < MAX_ENEMIES; i++) {
-      if (state->enemies[i].active) {
-        enemy_update(&state->enemies[i], deltaTime, SCREEN_HEIGHT,
-                     state->player.x);
+      if (state->enemy_hot[i].active) {
+        enemy_update(&state->enemy_hot[i], &state->enemy_cold[i], deltaTime,
+                     SCREEN_HEIGHT, SCREEN_WIDTH, state->player.x);
       }
     }
     game_handle_collisions(state);
@@ -175,11 +176,12 @@ static void render_game_world(const GameState *state, SDL_Renderer *renderer) {
     }
   }
   for (int i = 0; i < MAX_ENEMIES; i++) {
-    if (state->enemies[i].active) {
-      SDL_Rect enemyRect = {(int)state->enemies[i].x, (int)state->enemies[i].y,
-                            state->enemies[i].width, state->enemies[i].height};
+    if (state->enemy_hot[i].active) {
+      SDL_Rect enemyRect = {
+          (int)state->enemy_hot[i].x, (int)state->enemy_hot[i].y,
+          state->enemy_hot[i].width, state->enemy_hot[i].height};
       const BacteriaDefinition *def =
-          get_bacteria_def(state->enemies[i].species);
+          get_bacteria_def(state->enemy_hot[i].species);
       SDL_SetRenderDrawColor(renderer, def->r, def->g, def->b, 255);
       SDL_RenderFillRect(renderer, &enemyRect);
     }
@@ -190,20 +192,20 @@ static void game_handle_collisions(GameState *state) {
   for (int i = 0; i < MAX_BULLETS; i++) {
     if (state->bullets[i].active) {
       for (int j = 0; j < MAX_ENEMIES; j++) {
-        if (state->enemies[j].active) {
+        if (state->enemy_hot[j].active) {
           if (check_collision(state->bullets[i].x, state->bullets[i].y,
                               state->bullets[i].width, state->bullets[i].height,
-                              state->enemies[j].x, state->enemies[j].y,
-                              state->enemies[j].width,
-                              state->enemies[j].height)) {
+                              state->enemy_hot[j].x, state->enemy_hot[j].y,
+                              state->enemy_hot[j].width,
+                              state->enemy_hot[j].height)) {
             const BacteriaDefinition *bacteria_def =
-                get_bacteria_def(state->enemies[j].species);
+                get_bacteria_def(state->enemy_hot[j].species);
             const WeaponDefinition *weapon_def =
                 get_weapon_def(state->bullets[i].type);
-            state->enemies[j].health -=
+            state->enemy_hot[j].health -=
                 calculate_damage(weapon_def, bacteria_def);
-            if (state->enemies[j].health <= 0) {
-              state->enemies[j].active = false;
+            if (state->enemy_hot[j].health <= 0) {
+              state->enemy_hot[j].active = false;
             }
             state->bullets[i].active = false;
             break;
@@ -213,14 +215,15 @@ static void game_handle_collisions(GameState *state) {
     }
   }
   for (int i = 0; i < MAX_ENEMIES; i++) {
-    if (state->enemies[i].active) {
+    if (state->enemy_hot[i].active) {
       if (check_collision(state->player.hb_offset_x + state->player.x,
                           state->player.hb_offset_y + state->player.y,
                           state->player.hb_width, state->player.hb_height,
-                          state->enemies[i].x, state->enemies[i].y,
-                          state->enemies[i].width, state->enemies[i].height)) {
+                          state->enemy_hot[i].x, state->enemy_hot[i].y,
+                          state->enemy_hot[i].width,
+                          state->enemy_hot[i].height)) {
         state->player.active = false;
-        state->enemies[i].active = false;
+        state->enemy_hot[i].active = false;
         state->mode = STATE_GAME_OVER;
         break;
       }

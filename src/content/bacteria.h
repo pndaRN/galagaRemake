@@ -6,7 +6,9 @@
 #include <SDL2/SDL_rect.h>
 #include <stdbool.h>
 
-typedef struct Enemy Enemy;
+typedef struct EnemyCold EnemyCold;
+typedef struct EnemyHot EnemyHot;
+
 typedef enum { DIVE_SINE, DIVE_SCATTER, DIVE_ZIGZAG, DIVE_SWEEP } DiveType;
 
 typedef enum {
@@ -47,9 +49,10 @@ typedef struct {
     } sweep;
   };
 } DiveState;
-
-typedef void (*DiveInitFn)(Enemy *e, float player_x);
-typedef void (*DiveUpdateFn)(Enemy *e, float deltaTime, int screen_height,
+typedef void (*DiveInitFn)(EnemyHot *hot, EnemyCold *cold, int screen_height,
+                           int screen_width, float player_x);
+typedef void (*DiveUpdateFn)(EnemyHot *hot, EnemyCold *cold, float deltaTime,
+                             int screen_height, int screen_width,
                              float player_x);
 
 typedef struct {

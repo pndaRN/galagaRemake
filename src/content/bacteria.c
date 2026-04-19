@@ -6,166 +6,188 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-void strep_dive_init(Enemy *e, float player_x) {
-  (void)player_x;
-  e->dive_state.type = DIVE_SINE;
-  e->dive_state.sine.phase = 0.0f;
-  e->dive_state.sine.amplitude = 75.0f;
-  e->dive_state.sine.frequency = 0.5f;
-  e->dive_state.sine.start_x = e->x;
-  e->dive_state.sine.dive_speed = 200.0;
-}
-
-void strep_dive_update(Enemy *e, float deltaTime, int screen_height,
-                       float player_x) {
-  (void)player_x;
-  e->dive_state.sine.phase +=
-      e->dive_state.sine.frequency * 2.0f * M_PI * deltaTime;
-  e->x = e->dive_state.sine.start_x +
-         sinf(e->dive_state.sine.phase) * e->dive_state.sine.amplitude;
-  e->y += e->dive_state.sine.dive_speed * deltaTime;
-  if (e->y > screen_height) {
-    e->state = ENEMY_RETURNING;
-    e->dive_initialized = false;
-  }
-}
-
-void staph_dive_init(Enemy *e, float player_x) {
-  (void)player_x;
-  e->dive_state.type = DIVE_SCATTER;
-  e->dive_state.scatter.start_x = e->x;
-  e->dive_state.scatter.start_y = e->y;
-  e->dive_state.scatter.phase = IS_BURSTING;
-  e->dive_state.scatter.timer = 0.0f;
-  e->dive_state.scatter.burst_duration = 0.4f;
-  e->dive_state.scatter.pause_duration = 0.6f;
-
-  e->dive_state.scatter.burst_speed = 500.0f;
-
-  float random_angle = ((float)rand() / RAND_MAX) * M_PI;
-  e->dive_state.scatter.burst_angle = random_angle;
-}
-
-void staph_dive_update(Enemy *e, float deltaTime, int screen_height,
-                       float player_x) {
-  if (e->dive_state.scatter.phase == IS_BURSTING) {
-    e->x += cosf(e->dive_state.scatter.burst_angle) *
-            e->dive_state.scatter.burst_speed * deltaTime;
-    e->y += sinf(e->dive_state.scatter.burst_angle) *
-            e->dive_state.scatter.burst_speed * deltaTime;
-    e->dive_state.scatter.timer += deltaTime;
-
-    if (e->dive_state.scatter.timer >= e->dive_state.scatter.burst_duration) {
-      e->dive_state.scatter.phase = IS_PAUSING;
-      e->dive_state.scatter.timer = 0.0f;
-    }
-  } else if (e->dive_state.scatter.phase == IS_PAUSING) {
-    e->dive_state.scatter.timer += deltaTime;
-    if (e->dive_state.scatter.timer >= e->dive_state.scatter.pause_duration) {
-      e->dive_state.scatter.phase = IS_DIVING;
-      e->dive_state.scatter.target_x =
-          player_x + ((float)rand() / RAND_MAX - 0.5f) * 200.0f;
-    }
-  } else if (e->dive_state.scatter.phase == IS_DIVING) {
-    float diff = e->dive_state.scatter.target_x - e->x;
-    if (diff > 1.0f) {
-      e->x += e->dive_state.scatter.burst_speed * 0.3f * deltaTime;
-    } else if (diff < -1.0f) {
-      e->x -= e->dive_state.scatter.burst_speed * 0.3f * deltaTime;
-    }
-
-    e->y += deltaTime * e->dive_state.scatter.burst_speed;
-
-    if (e->y > screen_height) {
-      e->state = ENEMY_RETURNING;
-      e->dive_initialized = false;
-    }
-  }
-}
-
-void ecoli_dive_init(Enemy *e, float player_x) {
-  e->dive_state.type = DIVE_ZIGZAG;
-  if (player_x >= e->x) {
-    e->dive_state.zigzag.direction = 1;
-  } else {
-    e->dive_state.zigzag.direction = -1;
-  }
-  e->dive_state.zigzag.dash_cooldown = 0.2f;
-  e->dive_state.zigzag.timer = 0.0f;
-  e->dive_state.zigzag.start_x = e->x;
-  e->dive_state.zigzag.start_y = e->y;
-  e->dive_state.zigzag.phase = DASHING;
-  e->dive_state.zigzag.speed = 300.0f;
-}
-
-void ecoli_dive_update(Enemy *e, float deltaTime, int screen_height,
-                       float player_x) {
-  if (e->dive_state.zigzag.phase == DASHING) {
-    e->y += e->dive_state.zigzag.speed * deltaTime;
-    e->x +=
-        e->dive_state.zigzag.speed * deltaTime * e->dive_state.zigzag.direction;
-    e->dive_state.zigzag.timer += deltaTime;
-    if (e->dive_state.zigzag.timer >= e->dive_state.zigzag.dash_cooldown) {
-      e->dive_state.zigzag.phase = PAUSING;
-      e->dive_state.zigzag.timer = 0.0f;
-    }
-  } else if (e->dive_state.zigzag.phase == PAUSING) {
-    e->dive_state.zigzag.timer += deltaTime;
-    if (player_x >= e->x) {
-      e->dive_state.zigzag.direction = 1;
-    } else {
-      e->dive_state.zigzag.direction = -1;
-    }
-    if (e->dive_state.zigzag.timer >= e->dive_state.zigzag.dash_cooldown) {
-      e->dive_state.zigzag.phase = DASHING;
-      e->dive_state.zigzag.timer = 0.0f;
-    }
-  }
-  if (e->y > screen_height) {
-    e->state = ENEMY_RETURNING;
-    e->dive_initialized = false;
-  }
-}
-
-void pseudomonas_dive_init(Enemy *e, float player_x) {
-  (void)player_x;
-  e->dive_state.type = DIVE_SWEEP;
-  e->dive_state.sweep.t = 0.0f;
-  e->dive_state.sweep.control_points[0].x = e->x;
-  e->dive_state.sweep.control_points[0].y = e->y;
-  if (e->x >= e->screen_width / 2.0f) {
-    e->dive_state.sweep.control_points[3].x = 0;
-    e->dive_state.sweep.control_points[3].y = e->screen_height + e->height;
-    e->dive_state.sweep.control_points[2].x = e->screen_width * 0.25f;
-
-  } else {
-    e->dive_state.sweep.control_points[3].x = e->screen_width;
-    e->dive_state.sweep.control_points[3].y = e->screen_height + e->height;
-    e->dive_state.sweep.control_points[2].x = e->screen_width * 0.75f;
-  }
-  e->dive_state.sweep.control_points[1].x = e->x;
-  e->dive_state.sweep.control_points[1].y = e->y + 500.f;
-  e->dive_state.sweep.control_points[2].y = e->screen_height * 0.9f;
-}
-
-void pseudomonas_dive_update(Enemy *e, float deltaTime, int screen_height,
-                             float player_x) {
+void strep_dive_init(EnemyHot *hot, EnemyCold *cold, int screen_height,
+                     int screen_width, float player_x) {
+  (void)screen_width;
   (void)screen_height;
   (void)player_x;
-  e->dive_state.sweep.t += deltaTime / 2.0f;
-  SDL_FPoint pos = bezier_point(e->dive_state.sweep.control_points[0],
-                                e->dive_state.sweep.control_points[1],
-                                e->dive_state.sweep.control_points[2],
-                                e->dive_state.sweep.control_points[3],
-                                e->dive_state.sweep.t);
+  cold->dive_state.type = DIVE_SINE;
+  cold->dive_state.sine.phase = 0.0f;
+  cold->dive_state.sine.amplitude = 75.0f;
+  cold->dive_state.sine.frequency = 0.5f;
+  cold->dive_state.sine.start_x = hot->x;
+  cold->dive_state.sine.dive_speed = 200.0;
+}
 
-  e->x = pos.x;
-  e->y = pos.y;
+void strep_dive_update(EnemyHot *hot, EnemyCold *cold, float deltaTime,
+                       int screen_height, int screen_width, float player_x) {
+  (void)screen_width;
+  (void)player_x;
+  cold->dive_state.sine.phase +=
+      cold->dive_state.sine.frequency * 2.0f * M_PI * deltaTime;
+  hot->x = cold->dive_state.sine.start_x +
+           sinf(cold->dive_state.sine.phase) * cold->dive_state.sine.amplitude;
+  hot->y += cold->dive_state.sine.dive_speed * deltaTime;
+  if (hot->y > screen_height) {
+    cold->state = ENEMY_RETURNING;
+    cold->dive_initialized = false;
+  }
+}
 
-  if (e->dive_state.sweep.t >= 1.0f) {
-    e->dive_state.sweep.t = 1.0f; // clamp it
-    e->state = ENEMY_RETURNING;
-    e->dive_initialized = false;
+void staph_dive_init(EnemyHot *hot, EnemyCold *cold, int screen_height,
+                     int screen_width, float player_x) {
+  (void)screen_width;
+  (void)screen_height;
+  (void)player_x;
+  cold->dive_state.type = DIVE_SCATTER;
+  cold->dive_state.scatter.start_x = hot->x;
+  cold->dive_state.scatter.start_y = hot->y;
+  cold->dive_state.scatter.phase = IS_BURSTING;
+  cold->dive_state.scatter.timer = 0.0f;
+  cold->dive_state.scatter.burst_duration = 0.4f;
+  cold->dive_state.scatter.pause_duration = 0.6f;
+
+  cold->dive_state.scatter.burst_speed = 500.0f;
+
+  float random_angle = ((float)rand() / RAND_MAX) * M_PI;
+  cold->dive_state.scatter.burst_angle = random_angle;
+}
+
+void staph_dive_update(EnemyHot *hot, EnemyCold *cold, float deltaTime,
+                       int screen_height, int screen_width, float player_x) {
+  (void)screen_width;
+  if (cold->dive_state.scatter.phase == IS_BURSTING) {
+    hot->x += cosf(cold->dive_state.scatter.burst_angle) *
+              cold->dive_state.scatter.burst_speed * deltaTime;
+    hot->y += sinf(cold->dive_state.scatter.burst_angle) *
+              cold->dive_state.scatter.burst_speed * deltaTime;
+    cold->dive_state.scatter.timer += deltaTime;
+
+    if (cold->dive_state.scatter.timer >=
+        cold->dive_state.scatter.burst_duration) {
+      cold->dive_state.scatter.phase = IS_PAUSING;
+      cold->dive_state.scatter.timer = 0.0f;
+    }
+  } else if (cold->dive_state.scatter.phase == IS_PAUSING) {
+    cold->dive_state.scatter.timer += deltaTime;
+    if (cold->dive_state.scatter.timer >=
+        cold->dive_state.scatter.pause_duration) {
+      cold->dive_state.scatter.phase = IS_DIVING;
+      cold->dive_state.scatter.target_x =
+          player_x + ((float)rand() / RAND_MAX - 0.5f) * 200.0f;
+    }
+  } else if (cold->dive_state.scatter.phase == IS_DIVING) {
+    float diff = cold->dive_state.scatter.target_x - hot->x;
+    if (diff > 1.0f) {
+      hot->x += cold->dive_state.scatter.burst_speed * 0.3f * deltaTime;
+    } else if (diff < -1.0f) {
+      hot->x -= cold->dive_state.scatter.burst_speed * 0.3f * deltaTime;
+    }
+
+    hot->y += deltaTime * cold->dive_state.scatter.burst_speed;
+
+    if (hot->y > screen_height) {
+      cold->state = ENEMY_RETURNING;
+      cold->dive_initialized = false;
+    }
+  }
+}
+
+void ecoli_dive_init(EnemyHot *hot, EnemyCold *cold, int screen_height,
+                     int screen_width, float player_x) {
+  (void)screen_width;
+  (void)screen_height;
+
+  cold->dive_state.type = DIVE_ZIGZAG;
+  if (player_x >= hot->x) {
+    cold->dive_state.zigzag.direction = 1;
+  } else {
+    cold->dive_state.zigzag.direction = -1;
+  }
+  cold->dive_state.zigzag.dash_cooldown = 0.2f;
+  cold->dive_state.zigzag.timer = 0.0f;
+  cold->dive_state.zigzag.start_x = hot->x;
+  cold->dive_state.zigzag.start_y = hot->y;
+  cold->dive_state.zigzag.phase = DASHING;
+  cold->dive_state.zigzag.speed = 300.0f;
+}
+
+void ecoli_dive_update(EnemyHot *hot, EnemyCold *cold, float deltaTime,
+                       int screen_height, int screen_width, float player_x) {
+
+  (void)screen_width;
+
+  if (cold->dive_state.zigzag.phase == DASHING) {
+    hot->y += cold->dive_state.zigzag.speed * deltaTime;
+    hot->x += cold->dive_state.zigzag.speed * deltaTime *
+              cold->dive_state.zigzag.direction;
+    cold->dive_state.zigzag.timer += deltaTime;
+    if (cold->dive_state.zigzag.timer >=
+        cold->dive_state.zigzag.dash_cooldown) {
+      cold->dive_state.zigzag.phase = PAUSING;
+      cold->dive_state.zigzag.timer = 0.0f;
+    }
+  } else if (cold->dive_state.zigzag.phase == PAUSING) {
+    cold->dive_state.zigzag.timer += deltaTime;
+    if (player_x >= hot->x) {
+      cold->dive_state.zigzag.direction = 1;
+    } else {
+      cold->dive_state.zigzag.direction = -1;
+    }
+    if (cold->dive_state.zigzag.timer >=
+        cold->dive_state.zigzag.dash_cooldown) {
+      cold->dive_state.zigzag.phase = DASHING;
+      cold->dive_state.zigzag.timer = 0.0f;
+    }
+  }
+  if (hot->y > screen_height) {
+    cold->state = ENEMY_RETURNING;
+    cold->dive_initialized = false;
+  }
+}
+
+void pseudomonas_dive_init(EnemyHot *hot, EnemyCold *cold, int screen_height,
+                           int screen_width, float player_x) {
+  (void)player_x;
+  cold->dive_state.type = DIVE_SWEEP;
+  cold->dive_state.sweep.t = 0.0f;
+  cold->dive_state.sweep.control_points[0].x = hot->x;
+  cold->dive_state.sweep.control_points[0].y = hot->y;
+  if (hot->x >= screen_width / 2.0f) {
+    cold->dive_state.sweep.control_points[3].x = 0;
+    cold->dive_state.sweep.control_points[3].y = screen_height + hot->height;
+    cold->dive_state.sweep.control_points[2].x = screen_width * 0.25f;
+
+  } else {
+    cold->dive_state.sweep.control_points[3].x = screen_width;
+    cold->dive_state.sweep.control_points[3].y = screen_height + hot->height;
+    cold->dive_state.sweep.control_points[2].x = screen_width * 0.75f;
+  }
+  cold->dive_state.sweep.control_points[1].x = hot->x;
+  cold->dive_state.sweep.control_points[1].y = hot->y + 500.f;
+  cold->dive_state.sweep.control_points[2].y = screen_height * 0.9f;
+}
+
+void pseudomonas_dive_update(EnemyHot *hot, EnemyCold *cold, float deltaTime,
+                             int screen_height, int screen_width,
+                             float player_x) {
+  (void)screen_width;
+  (void)screen_height;
+  (void)player_x;
+  cold->dive_state.sweep.t += deltaTime / 2.0f;
+  SDL_FPoint pos = bezier_point(cold->dive_state.sweep.control_points[0],
+                                cold->dive_state.sweep.control_points[1],
+                                cold->dive_state.sweep.control_points[2],
+                                cold->dive_state.sweep.control_points[3],
+                                cold->dive_state.sweep.t);
+
+  hot->x = pos.x;
+  hot->y = pos.y;
+
+  if (cold->dive_state.sweep.t >= 1.0f) {
+    cold->dive_state.sweep.t = 1.0f; // clamp it
+    cold->state = ENEMY_RETURNING;
+    cold->dive_initialized = false;
   }
 }
 
