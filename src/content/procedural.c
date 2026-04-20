@@ -112,8 +112,8 @@ EntryPathData generate_path(PathType type, int screen_height, int screen_width,
 }
 
 static const SpawnPointFraction SPAWN_POINT_FACTIONS[] = {
-    {.x = -0.07f, .y = 0.17f}, 
     {.x = -0.07f, .y = 0.33f},
+    {.x = -0.07f, .y = 0.17f}, 
     {.x = 0.17f, .y = -0.07f}, 
     {.x = 0.33f, .y = -0.07f},
     {.x = 0.5f, .y = -0.07f}, 
