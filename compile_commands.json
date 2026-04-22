@@ -1,218 +1,240 @@
 [
   {
+    "file": "src/engine/collision.c",
     "arguments": [
-      "/usr/bin/gcc",
-      "-c",
+      "gcc",
       "-Wall",
       "-Wextra",
       "-g",
       "-Isrc/engine",
       "-Isrc/content",
       "-Isrc/application",
+      "src/engine/collision.c",
       "-o",
-      "game",
-      "src/engine/collision.c"
+      "game"
     ],
-    "directory": "/home/mark/developer/workspace/games/galagaRemake",
-    "file": "/home/mark/developer/workspace/games/galagaRemake/src/engine/collision.c",
-    "output": "/home/mark/developer/workspace/games/galagaRemake/game"
+    "directory": "/home/pndarn/developer/workspaces/games/galagaRemake",
+    "output": "game"
   },
   {
+    "file": "src/engine/math_utils.c",
     "arguments": [
-      "/usr/bin/gcc",
-      "-c",
+      "gcc",
       "-Wall",
       "-Wextra",
       "-g",
       "-Isrc/engine",
       "-Isrc/content",
       "-Isrc/application",
+      "src/engine/math_utils.c",
       "-o",
-      "game",
-      "src/engine/math_utils.c"
+      "game"
     ],
-    "directory": "/home/mark/developer/workspace/games/galagaRemake",
-    "file": "/home/mark/developer/workspace/games/galagaRemake/src/engine/math_utils.c",
-    "output": "/home/mark/developer/workspace/games/galagaRemake/game"
+    "directory": "/home/pndarn/developer/workspaces/games/galagaRemake",
+    "output": "game"
   },
   {
+    "file": "src/engine/texture_loader.c",
     "arguments": [
-      "/usr/bin/gcc",
-      "-c",
+      "gcc",
       "-Wall",
       "-Wextra",
       "-g",
       "-Isrc/engine",
       "-Isrc/content",
       "-Isrc/application",
+      "src/engine/texture_loader.c",
       "-o",
-      "game",
-      "src/content/bacteria.c"
+      "game"
     ],
-    "directory": "/home/mark/developer/workspace/games/galagaRemake",
-    "file": "/home/mark/developer/workspace/games/galagaRemake/src/content/bacteria.c",
-    "output": "/home/mark/developer/workspace/games/galagaRemake/game"
+    "directory": "/home/pndarn/developer/workspaces/games/galagaRemake",
+    "output": "game"
   },
   {
+    "file": "src/content/assets.c",
     "arguments": [
-      "/usr/bin/gcc",
-      "-c",
+      "gcc",
       "-Wall",
       "-Wextra",
       "-g",
       "-Isrc/engine",
       "-Isrc/content",
       "-Isrc/application",
+      "src/content/assets.c",
       "-o",
-      "game",
-      "src/content/bullet.c"
+      "game"
     ],
-    "directory": "/home/mark/developer/workspace/games/galagaRemake",
-    "file": "/home/mark/developer/workspace/games/galagaRemake/src/content/bullet.c",
-    "output": "/home/mark/developer/workspace/games/galagaRemake/game"
+    "directory": "/home/pndarn/developer/workspaces/games/galagaRemake",
+    "output": "game"
   },
   {
+    "file": "src/content/bacteria.c",
     "arguments": [
-      "/usr/bin/gcc",
-      "-c",
+      "gcc",
       "-Wall",
       "-Wextra",
       "-g",
       "-Isrc/engine",
       "-Isrc/content",
       "-Isrc/application",
+      "src/content/bacteria.c",
       "-o",
-      "game",
-      "src/content/enemy.c"
+      "game"
     ],
-    "directory": "/home/mark/developer/workspace/games/galagaRemake",
-    "file": "/home/mark/developer/workspace/games/galagaRemake/src/content/enemy.c",
-    "output": "/home/mark/developer/workspace/games/galagaRemake/game"
+    "directory": "/home/pndarn/developer/workspaces/games/galagaRemake",
+    "output": "game"
   },
   {
+    "file": "src/content/bullet.c",
     "arguments": [
-      "/usr/bin/gcc",
-      "-c",
+      "gcc",
       "-Wall",
       "-Wextra",
       "-g",
       "-Isrc/engine",
       "-Isrc/content",
       "-Isrc/application",
+      "src/content/bullet.c",
       "-o",
-      "game",
-      "src/content/level.c"
+      "game"
     ],
-    "directory": "/home/mark/developer/workspace/games/galagaRemake",
-    "file": "/home/mark/developer/workspace/games/galagaRemake/src/content/level.c",
-    "output": "/home/mark/developer/workspace/games/galagaRemake/game"
+    "directory": "/home/pndarn/developer/workspaces/games/galagaRemake",
+    "output": "game"
   },
   {
+    "file": "src/content/enemy.c",
     "arguments": [
-      "/usr/bin/gcc",
-      "-c",
+      "gcc",
       "-Wall",
       "-Wextra",
       "-g",
       "-Isrc/engine",
       "-Isrc/content",
       "-Isrc/application",
+      "src/content/enemy.c",
       "-o",
-      "game",
-      "src/content/player.c"
+      "game"
     ],
-    "directory": "/home/mark/developer/workspace/games/galagaRemake",
-    "file": "/home/mark/developer/workspace/games/galagaRemake/src/content/player.c",
-    "output": "/home/mark/developer/workspace/games/galagaRemake/game"
+    "directory": "/home/pndarn/developer/workspaces/games/galagaRemake",
+    "output": "game"
   },
   {
+    "file": "src/content/level.c",
     "arguments": [
-      "/usr/bin/gcc",
-      "-c",
+      "gcc",
       "-Wall",
       "-Wextra",
       "-g",
       "-Isrc/engine",
       "-Isrc/content",
       "-Isrc/application",
+      "src/content/level.c",
       "-o",
-      "game",
-      "src/content/procedural.c"
+      "game"
     ],
-    "directory": "/home/mark/developer/workspace/games/galagaRemake",
-    "file": "/home/mark/developer/workspace/games/galagaRemake/src/content/procedural.c",
-    "output": "/home/mark/developer/workspace/games/galagaRemake/game"
+    "directory": "/home/pndarn/developer/workspaces/games/galagaRemake",
+    "output": "game"
   },
   {
+    "file": "src/content/player.c",
     "arguments": [
-      "/usr/bin/gcc",
-      "-c",
+      "gcc",
       "-Wall",
       "-Wextra",
       "-g",
       "-Isrc/engine",
       "-Isrc/content",
       "-Isrc/application",
+      "src/content/player.c",
       "-o",
-      "game",
-      "src/content/wave.c"
+      "game"
     ],
-    "directory": "/home/mark/developer/workspace/games/galagaRemake",
-    "file": "/home/mark/developer/workspace/games/galagaRemake/src/content/wave.c",
-    "output": "/home/mark/developer/workspace/games/galagaRemake/game"
+    "directory": "/home/pndarn/developer/workspaces/games/galagaRemake",
+    "output": "game"
   },
   {
+    "file": "src/content/procedural.c",
     "arguments": [
-      "/usr/bin/gcc",
-      "-c",
+      "gcc",
       "-Wall",
       "-Wextra",
       "-g",
       "-Isrc/engine",
       "-Isrc/content",
       "-Isrc/application",
+      "src/content/procedural.c",
       "-o",
-      "game",
-      "src/content/weapon.c"
+      "game"
     ],
-    "directory": "/home/mark/developer/workspace/games/galagaRemake",
-    "file": "/home/mark/developer/workspace/games/galagaRemake/src/content/weapon.c",
-    "output": "/home/mark/developer/workspace/games/galagaRemake/game"
+    "directory": "/home/pndarn/developer/workspaces/games/galagaRemake",
+    "output": "game"
   },
   {
+    "file": "src/content/wave.c",
     "arguments": [
-      "/usr/bin/gcc",
-      "-c",
+      "gcc",
       "-Wall",
       "-Wextra",
       "-g",
       "-Isrc/engine",
       "-Isrc/content",
       "-Isrc/application",
+      "src/content/wave.c",
       "-o",
-      "game",
-      "src/application/game.c"
+      "game"
     ],
-    "directory": "/home/mark/developer/workspace/games/galagaRemake",
-    "file": "/home/mark/developer/workspace/games/galagaRemake/src/application/game.c",
-    "output": "/home/mark/developer/workspace/games/galagaRemake/game"
+    "directory": "/home/pndarn/developer/workspaces/games/galagaRemake",
+    "output": "game"
   },
   {
+    "file": "src/content/weapon.c",
     "arguments": [
-      "/usr/bin/gcc",
-      "-c",
+      "gcc",
       "-Wall",
       "-Wextra",
       "-g",
       "-Isrc/engine",
       "-Isrc/content",
       "-Isrc/application",
+      "src/content/weapon.c",
       "-o",
-      "game",
-      "src/application/main.c"
+      "game"
     ],
-    "directory": "/home/mark/developer/workspace/games/galagaRemake",
-    "file": "/home/mark/developer/workspace/games/galagaRemake/src/application/main.c",
-    "output": "/home/mark/developer/workspace/games/galagaRemake/game"
+    "directory": "/home/pndarn/developer/workspaces/games/galagaRemake",
+    "output": "game"
+  },
+  {
+    "file": "src/application/game.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-Isrc/engine",
+      "-Isrc/content",
+      "-Isrc/application",
+      "src/application/game.c",
+      "-o",
+      "game"
+    ],
+    "directory": "/home/pndarn/developer/workspaces/games/galagaRemake",
+    "output": "game"
+  },
+  {
+    "file": "src/application/main.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-Isrc/engine",
+      "-Isrc/content",
+      "-Isrc/application",
+      "src/application/main.c",
+      "-o",
+      "game"
+    ],
+    "directory": "/home/pndarn/developer/workspaces/games/galagaRemake",
+    "output": "game"
   }
 ]

@@ -4,6 +4,7 @@
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
 
+#include "assets.h"
 #include "bullet.h"
 #include "enemy.h"
 #include "level.h"
@@ -25,6 +26,7 @@ typedef struct {
   EnemyHot enemy_hot[MAX_ENEMIES];
   EnemyCold enemy_cold[MAX_ENEMIES];
   Level level;
+  Assets assets;
   GameState_Mode mode;
 } GameState;
 
@@ -32,5 +34,6 @@ void game_init(GameState *state, SDL_Renderer *renderer);
 void game_render(const GameState *state, SDL_Renderer *renderer);
 void game_update(GameState *state, float deltaTime, const Uint8 *keystate);
 void game_handle_events(GameState *state, SDL_Event *event, bool *running);
+void game_cleanup(GameState *state);
 
 #endif

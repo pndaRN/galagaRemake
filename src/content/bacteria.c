@@ -203,7 +203,8 @@ static const BacteriaDefinition BACTERIA_DEFS[] = {
      .health = 6,
      .base_speed = 400.0f,
      .width = 30,
-     .height = 30},
+     .height = 30,
+     .texture_path = "assets/bacteria/strep.png"},
 
     {.species = SPECIES_STAPHYLOCOCCUS,
      .weakness = WEAPON_PCN,
@@ -216,7 +217,8 @@ static const BacteriaDefinition BACTERIA_DEFS[] = {
      .health = 6,
      .base_speed = 300.0f,
      .width = 50,
-     .height = 50},
+     .height = 50,
+     .texture_path = "assets/bacteria/staph.png"},
 
     {.species = SPECIES_ECOLI,
      .weakness = WEAPON_PMX,
@@ -229,7 +231,8 @@ static const BacteriaDefinition BACTERIA_DEFS[] = {
      .health = 6,
      .base_speed = 500.0f,
      .width = 50,
-     .height = 50},
+     .height = 50,
+     .texture_path = "assets/bacteria/ecoli.png"},
 
     {.species = SPECIES_PSEUDOMONAS,
      .weakness = WEAPON_PMX,
@@ -242,7 +245,8 @@ static const BacteriaDefinition BACTERIA_DEFS[] = {
      .health = 6,
      .base_speed = 400.0f,
      .width = 50,
-     .height = 50}};
+     .height = 50,
+     .texture_path = "assets/bacteria/pseudomonas.png"}};
 
 const BacteriaDefinition *get_bacteria_def(BacteriaSpecies species) {
   return &BACTERIA_DEFS[species];

@@ -9,6 +9,7 @@ int main() {
   int result = 0;
   SDL_Window *window = NULL;
   SDL_Renderer *renderer = NULL;
+  bool game_started = false;
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     printf("SDL could not init! SDL_Error: %s\n", SDL_GetError());
     result = 1;
@@ -36,6 +37,7 @@ int main() {
 
   GameState state;
   game_init(&state, renderer);
+  game_started = true;
 
   bool running = true;
   SDL_Event event;
@@ -55,6 +57,8 @@ int main() {
   }
 
 cleanup:
+  if (game_started)
+    game_cleanup(&state);
   if (renderer)
     SDL_DestroyRenderer(renderer);
   if (window)

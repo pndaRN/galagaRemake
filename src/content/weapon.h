@@ -9,7 +9,8 @@
 
 typedef struct {
   WeaponType type;
-  const char *texture_path;
+  const char *bullet_texture_path;
+  const char *ship_texture_path;
   int damage_effective, damage_neutral, damage_ineffective, width, height;
   float speed;
 } WeaponDefinition;

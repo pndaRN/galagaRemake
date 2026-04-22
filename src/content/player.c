@@ -34,7 +34,7 @@ Player player_create(int screen_width, int screen_height,
       p.ship_texture[i] = SDL_CreateTextureFromSurface(renderer, surface);
       SDL_FreeSurface(surface);
     }
-    surface = IMG_Load(get_weapon_def(i)->texture_path);
+    surface = IMG_Load(get_weapon_def(i)->ship_texture_path);
     if (!surface) {
       printf("Failed to load image! IMG_Error: %s\n", IMG_GetError());
       p.bullet_texture[i] = NULL;

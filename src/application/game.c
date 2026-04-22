@@ -15,6 +15,7 @@ static void game_handle_collisions(GameState *state);
 static void render_game_world(const GameState *state, SDL_Renderer *renderer);
 
 void game_init(GameState *state, SDL_Renderer *renderer) {
+  assets_init(&state->assets, renderer);
   state->player = player_create(SCREEN_WIDTH, SCREEN_HEIGHT, renderer);
   state->level = level_init(1, SCREEN_HEIGHT, SCREEN_WIDTH);
 
@@ -230,3 +231,5 @@ static void game_handle_collisions(GameState *state) {
     }
   }
 }
+
+void game_cleanup(GameState *state) { assets_destroy(&state->assets); }

@@ -15,7 +15,8 @@ typedef enum {
   SPECIES_STREPTOCOCCUS,
   SPECIES_STAPHYLOCOCCUS,
   SPECIES_ECOLI,
-  SPECIES_PSEUDOMONAS
+  SPECIES_PSEUDOMONAS,
+  SPECIES_COUNT
 } BacteriaSpecies;
 
 typedef enum { IS_BURSTING, IS_PAUSING, IS_DIVING } ScatterPhase;
@@ -63,6 +64,7 @@ typedef struct {
   DiveUpdateFn dive_update;
   Uint8 r, g, b;
   int health, base_speed, width, height;
+  const char *texture_path;
 } BacteriaDefinition;
 
 const BacteriaDefinition *get_bacteria_def(BacteriaSpecies species);
