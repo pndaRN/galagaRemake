@@ -16,8 +16,6 @@ Bullet bullet_init(Player *player) {
 
   b.type = player->current_ammo;
 
-  b.texture = player->bullet_texture[player->current_ammo];
-
   return b;
 }
 

@@ -14,8 +14,6 @@ typedef struct {
   float speed;
   bool active;
   WeaponType current_ammo;
-  SDL_Texture *ship_texture[WEAPON_COUNT];
-  SDL_Texture *bullet_texture[WEAPON_COUNT];
 } Player;
 
 Player player_create(int screen_width, int screen_height,

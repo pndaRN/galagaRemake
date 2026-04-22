@@ -25,24 +25,6 @@ Player player_create(int screen_width, int screen_height,
                                           "assets/ships/ship_pcn.png",
                                           "assets/ships/ship_pmx.png"};
 
-  for (int i = 0; i < WEAPON_COUNT; i++) {
-    SDL_Surface *surface = IMG_Load(ship_paths[i]);
-    if (!surface) {
-      printf("Failed to load image! IMG_Error: %s\n", IMG_GetError());
-      p.ship_texture[i] = NULL;
-    } else {
-      p.ship_texture[i] = SDL_CreateTextureFromSurface(renderer, surface);
-      SDL_FreeSurface(surface);
-    }
-    surface = IMG_Load(get_weapon_def(i)->ship_texture_path);
-    if (!surface) {
-      printf("Failed to load image! IMG_Error: %s\n", IMG_GetError());
-      p.bullet_texture[i] = NULL;
-    } else {
-      p.bullet_texture[i] = SDL_CreateTextureFromSurface(renderer, surface);
-      SDL_FreeSurface(surface);
-    }
-  }
   return p;
 }
 

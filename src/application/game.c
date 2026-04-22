@@ -156,9 +156,8 @@ static void render_game_world(const GameState *state, SDL_Renderer *renderer) {
   if (state->player.active) {
     SDL_Rect playerRect = {(int)state->player.x, (int)state->player.y,
                            state->player.width, state->player.height};
-    SDL_RenderCopy(renderer,
-                   state->player.ship_texture[state->player.current_ammo], NULL,
-                   &playerRect);
+    SDL_RenderCopy(renderer, state->assets.ships[state->player.current_ammo],
+                   NULL, &playerRect);
 
     // HITBOX TEST
 
@@ -170,10 +169,12 @@ static void render_game_world(const GameState *state, SDL_Renderer *renderer) {
   }
 
   for (int i = 0; i < MAX_BULLETS; i++) {
-    if (state->bullets[i].active && state->bullets[i].texture) {
+    if (state->bullets[i].active &&
+        state->assets.bullets[state->bullets[i].type]) {
       SDL_Rect bulletRect = {(int)state->bullets[i].x, (int)state->bullets[i].y,
                              state->bullets[i].width, state->bullets[i].height};
-      SDL_RenderCopy(renderer, state->bullets[i].texture, NULL, &bulletRect);
+      SDL_RenderCopy(renderer, state->assets.bullets[state->bullets[i].type],
+                     NULL, &bulletRect);
     }
   }
   for (int i = 0; i < MAX_ENEMIES; i++) {
