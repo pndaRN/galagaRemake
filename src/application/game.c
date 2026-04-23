@@ -186,7 +186,15 @@ static void render_game_world(const GameState *state, SDL_Renderer *renderer) {
       SDL_Texture *texture =
           state->assets.bacteria[state->enemy_hot[i].species];
       if (texture) {
-        SDL_RenderCopy(renderer, texture, NULL, &enemyRect);
+        const BacteriaDefinition *def =
+            get_bacteria_def(state->enemy_hot[i].species);
+        SDL_Rect srcRect = {
+            state->enemy_hot[i].current_frame * def->width,
+            0,
+            def->width,
+            def->height,
+        };
+        SDL_RenderCopy(renderer, texture, &srcRect, &enemyRect);
       } else {
         const BacteriaDefinition *def =
             get_bacteria_def(state->enemy_hot[i].species);

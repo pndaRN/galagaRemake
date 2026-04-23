@@ -16,10 +16,10 @@ typedef enum {
 } EnemyState;
 
 typedef struct EnemyHot {
-  float x, y;
+  float x, y, animation_timer;
   int width, height;
   bool active;
-  int health;
+  int health, current_frame;
   BacteriaSpecies species;
 } EnemyHot;
 

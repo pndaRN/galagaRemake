@@ -13,10 +13,37 @@ void strep_dive_init(EnemyHot *hot, EnemyCold *cold, int screen_height,
   (void)player_x;
   cold->dive_state.type = DIVE_SINE;
   cold->dive_state.sine.phase = 0.0f;
-  cold->dive_state.sine.amplitude = 75.0f;
-  cold->dive_state.sine.frequency = 0.5f;
+  cold->dive_state.sine.amplitude = 10.0f;
+  cold->dive_state.sine.frequency = 1.0f;
   cold->dive_state.sine.start_x = hot->x;
   cold->dive_state.sine.dive_speed = 200.0;
+}
+
+void strep_hold_update(EnemyHot *hot, EnemyCold *cold, float deltaTime) {
+  (void)deltaTime;
+
+  const BacteriaDefinition *def = get_bacteria_def(hot->species);
+
+  float baseX = cold->formation_point.x;
+  float baseY = cold->formation_point.y;
+
+  Uint64 elapsed = SDL_GetTicks64() - cold->state_start_time;
+  float elapsed_seconds = elapsed / 1000.0f;
+
+  float phase = elapsed_seconds * 2.0f * M_PI;
+
+  float ramp = fminf(elapsed_seconds, 1.0f);
+
+  hot->x = baseX + sinf(phase) * ramp * def->width;
+  hot->y = baseY;
+
+  float cycle_position =
+      fmodf(cold->dive_state.sine.phase, 2.0f * M_PI) / (2.0f * M_PI);
+  if (cycle_position < 0)
+    cycle_position += 1.0f;
+  hot->current_frame = (int)(cycle_position * def->frame_count);
+  if (hot->current_frame >= def->frame_count)
+    hot->current_frame = def->frame_count - 1;
 }
 
 void strep_dive_update(EnemyHot *hot, EnemyCold *cold, float deltaTime,
@@ -25,8 +52,18 @@ void strep_dive_update(EnemyHot *hot, EnemyCold *cold, float deltaTime,
   (void)player_x;
   cold->dive_state.sine.phase +=
       cold->dive_state.sine.frequency * 2.0f * M_PI * deltaTime;
-  hot->x = cold->dive_state.sine.start_x +
-           sinf(cold->dive_state.sine.phase) * cold->dive_state.sine.amplitude;
+  float s = sinf(cold->dive_state.sine.phase);
+  float eased = s;
+  hot->x =
+      cold->dive_state.sine.start_x + eased * cold->dive_state.sine.amplitude;
+  const BacteriaDefinition *def = get_bacteria_def(hot->species);
+  float cycle_position =
+      fmodf(cold->dive_state.sine.phase, 2.0f * M_PI) / (2.0f * M_PI);
+  if (cycle_position < 0)
+    cycle_position += 1.0f;
+  hot->current_frame = (int)(cycle_position * def->frame_count);
+  if (hot->current_frame >= def->frame_count)
+    hot->current_frame = def->frame_count - 1;
   hot->y += cold->dive_state.sine.dive_speed * deltaTime;
   if (hot->y > screen_height) {
     cold->state = ENEMY_RETURNING;
@@ -205,7 +242,7 @@ static const BacteriaDefinition BACTERIA_DEFS[] = {
      .width = 32,
      .height = 64,
      .frame_count = 12,
-     .frame_duration = 0.8f,
+     .frame_duration = 1.0f / 12.0f,
      .texture_path = "assets/bacteria/strep.png"},
 
     {.species = SPECIES_STAPHYLOCOCCUS,

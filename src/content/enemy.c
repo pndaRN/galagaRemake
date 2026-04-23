@@ -19,6 +19,8 @@ void enemy_init(EnemyHot *hot, EnemyCold *cold, float speed_scalar,
   hot->species = species;
   hot->x = path_data.control_points[0].x;
   hot->y = path_data.control_points[0].y;
+  hot->current_frame = rand() % bacteria_def->frame_count;
+  hot->animation_timer = 0.0f;
 
   cold->speed_scalar = speed_scalar;
   cold->speed = bacteria_def->base_speed * speed_scalar;
@@ -32,6 +34,14 @@ void enemy_init(EnemyHot *hot, EnemyCold *cold, float speed_scalar,
 
 void enemy_update(EnemyHot *hot, EnemyCold *cold, float deltaTime,
                   int screen_height, int screen_width, float player_x) {
+  const BacteriaDefinition *def = get_bacteria_def(hot->species);
+  if (def->frame_count > 1) {
+    hot->animation_timer += deltaTime;
+    if (hot->animation_timer >= def->frame_duration) {
+      hot->animation_timer -= def->frame_duration;
+      hot->current_frame = (hot->current_frame + 1) % def->frame_count;
+    }
+  }
   if (!hot->active) {
     return;
   }
@@ -58,17 +68,10 @@ void enemy_update(EnemyHot *hot, EnemyCold *cold, float deltaTime,
   }
 
   case ENEMY_HOLDING: {
-    float baseX = cold->formation_point.x;
-    float baseY = cold->formation_point.y;
-
-    Uint64 elapsed = SDL_GetTicks64() - cold->state_start_time;
-    float timeFactor = (elapsed / 2000.0f) * (2.0f * M_PI);
-
-    float ramp = fminf(elapsed / 1000.0f, 1.0f);
-    float yOffset = sinf(timeFactor) * 20.0f * ramp;
-
-    hot->x = baseX;
-    hot->y = baseY + yOffset;
+    const BacteriaDefinition *def = get_bacteria_def(hot->species);
+    if (def->hold_update) {
+      def->hold_update(hot, cold, deltaTime);
+    }
     break;
   }
 

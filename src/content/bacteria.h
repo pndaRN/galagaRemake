@@ -55,6 +55,7 @@ typedef void (*DiveInitFn)(EnemyHot *hot, EnemyCold *cold, int screen_height,
 typedef void (*DiveUpdateFn)(EnemyHot *hot, EnemyCold *cold, float deltaTime,
                              int screen_height, int screen_width,
                              float player_x);
+typedef void (*HoldUpdateFn)(EnemyHot *hot, EnemyCold *cold, float deltaTime);
 
 typedef struct {
   BacteriaSpecies species;
@@ -62,6 +63,7 @@ typedef struct {
   DiveType dive_type;
   DiveInitFn dive_init;
   DiveUpdateFn dive_update;
+  HoldUpdateFn hold_update;
   Uint8 r, g, b;
   int health, base_speed, width, height, frame_count;
   float frame_duration;
