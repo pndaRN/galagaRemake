@@ -1,7 +1,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_render.h>
 #include <stdbool.h>
 
 #include "weapon.h"
@@ -16,8 +15,7 @@ typedef struct {
   WeaponType current_ammo;
 } Player;
 
-Player player_create(int screen_width, int screen_height,
-                     SDL_Renderer *renderer);
+Player player_create(int screen_width, int screen_height);
 void player_update(Player *p, const Uint8 *keystate, float deltaTime,
                    int screenWidth);
 

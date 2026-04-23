@@ -1,11 +1,8 @@
 #include "player.h"
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_render.h>
 #include <SDL2/SDL_surface.h>
 #include <stdio.h>
 
-Player player_create(int screen_width, int screen_height,
-                     SDL_Renderer *renderer) {
+Player player_create(int screen_width, int screen_height) {
   Player p;
 
   p.width = 64;
@@ -20,10 +17,6 @@ Player player_create(int screen_width, int screen_height,
 
   p.current_ammo = WEAPON_NEUTRAL;
   p.active = true;
-
-  const char *ship_paths[WEAPON_COUNT] = {"assets/ships/ship_neutral.png",
-                                          "assets/ships/ship_pcn.png",
-                                          "assets/ships/ship_pmx.png"};
 
   return p;
 }
