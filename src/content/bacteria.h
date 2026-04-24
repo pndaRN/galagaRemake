@@ -65,7 +65,8 @@ typedef struct {
   DiveUpdateFn dive_update;
   HoldUpdateFn hold_update;
   Uint8 r, g, b;
-  int health, base_speed, width, height, frame_count;
+  int health, base_speed, width, height, hb_width, hb_height, frame_count,
+      offset_x, offset_y;
   float frame_duration;
   const char *texture_path;
 } BacteriaDefinition;

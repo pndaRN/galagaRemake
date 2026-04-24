@@ -1,6 +1,5 @@
 #include "player.h"
 #include <SDL2/SDL_surface.h>
-#include <stdio.h>
 
 Player player_create(int screen_width, int screen_height) {
   Player p;

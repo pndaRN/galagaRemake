@@ -210,11 +210,13 @@ static void game_handle_collisions(GameState *state) {
     if (state->bullets[i].active) {
       for (int j = 0; j < MAX_ENEMIES; j++) {
         if (state->enemy_hot[j].active) {
-          if (check_collision(state->bullets[i].x, state->bullets[i].y,
-                              state->bullets[i].width, state->bullets[i].height,
-                              state->enemy_hot[j].x, state->enemy_hot[j].y,
-                              state->enemy_hot[j].width,
-                              state->enemy_hot[j].height)) {
+          if (check_collision(
+                  state->bullets[i].x, state->bullets[i].y,
+                  state->bullets[i].width, state->bullets[i].height,
+                  state->enemy_hot[j].x + state->enemy_hot[j].offset_x,
+                  state->enemy_hot[j].y + state->enemy_hot[j].offset_y,
+                  state->enemy_hot[j].hb_width,
+                  state->enemy_hot[j].hb_height)) {
             const BacteriaDefinition *bacteria_def =
                 get_bacteria_def(state->enemy_hot[j].species);
             const WeaponDefinition *weapon_def =
@@ -236,9 +238,10 @@ static void game_handle_collisions(GameState *state) {
       if (check_collision(state->player.hb_offset_x + state->player.x,
                           state->player.hb_offset_y + state->player.y,
                           state->player.hb_width, state->player.hb_height,
-                          state->enemy_hot[i].x, state->enemy_hot[i].y,
-                          state->enemy_hot[i].width,
-                          state->enemy_hot[i].height)) {
+                          state->enemy_hot[i].x + state->enemy_hot[i].offset_x,
+                          state->enemy_hot[i].y + state->enemy_hot[i].offset_y,
+                          state->enemy_hot[i].hb_width,
+                          state->enemy_hot[i].hb_height)) {
         state->player.active = false;
         state->enemy_hot[i].active = false;
         state->mode = STATE_GAME_OVER;

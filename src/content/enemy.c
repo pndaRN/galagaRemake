@@ -14,6 +14,10 @@ void enemy_init(EnemyHot *hot, EnemyCold *cold, float speed_scalar,
 
   hot->width = bacteria_def->width;
   hot->height = bacteria_def->height;
+  hot->hb_height = bacteria_def->hb_height;
+  hot->hb_width = bacteria_def->hb_width;
+  hot->offset_x = bacteria_def->offset_x;
+  hot->offset_y = bacteria_def->offset_y;
   hot->health = bacteria_def->health;
   hot->active = true;
   hot->species = species;
