@@ -194,7 +194,8 @@ static void render_game_world(const GameState *state, SDL_Renderer *renderer) {
             def->width,
             def->height,
         };
-        SDL_RenderCopy(renderer, texture, &srcRect, &enemyRect);
+        SDL_RenderCopyEx(renderer, texture, &srcRect, &enemyRect,
+                         state->enemy_hot[i].angle, NULL, SDL_FLIP_NONE);
       } else {
         const BacteriaDefinition *def =
             get_bacteria_def(state->enemy_hot[i].species);
