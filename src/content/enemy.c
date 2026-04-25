@@ -56,10 +56,10 @@ void enemy_update(EnemyHot *hot, EnemyCold *cold, float deltaTime,
 
     cold->t += deltaTime / 3.0f;
 
-    SDL_FPoint tangent = bezier_tangent(cold->entry_path.control_points[0],
-                                  cold->entry_path.control_points[1],
-                                  cold->entry_path.control_points[2],
-                                  cold->entry_path.control_points[3], cold->t);
+    SDL_FPoint tangent = bezier_tangent(
+        cold->entry_path.control_points[0], cold->entry_path.control_points[1],
+        cold->entry_path.control_points[2], cold->entry_path.control_points[3],
+        cold->t);
 
     hot->angle = atan2f(tangent.y, tangent.x) * (180.0f / M_PI) - 90.0f;
 
@@ -75,7 +75,6 @@ void enemy_update(EnemyHot *hot, EnemyCold *cold, float deltaTime,
       cold->t = 1.0f; // clamp it
       cold->state = ENEMY_HOLDING;
       cold->state_start_time = SDL_GetTicks64();
-      hot->angle = 0.0f;
     }
 
     break;
@@ -83,9 +82,11 @@ void enemy_update(EnemyHot *hot, EnemyCold *cold, float deltaTime,
 
   case ENEMY_HOLDING: {
     const BacteriaDefinition *def = get_bacteria_def(hot->species);
+    hot->angle = hot->angle + (0.0f - hot->angle) * (deltaTime * 3.0f);
     if (def->hold_update) {
       def->hold_update(hot, cold, deltaTime);
     }
+
     break;
   }
 

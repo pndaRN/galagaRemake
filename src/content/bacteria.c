@@ -65,6 +65,16 @@ void strep_dive_update(EnemyHot *hot, EnemyCold *cold, float deltaTime,
   if (hot->current_frame >= def->frame_count)
     hot->current_frame = def->frame_count - 1;
   hot->y += cold->dive_state.sine.dive_speed * deltaTime;
+
+  hot->angle = atan2f(cold->dive_state.sine.dive_speed,
+                      cosf(cold->dive_state.sine.phase) *
+                          cold->dive_state.sine.amplitude *
+                          cold->dive_state.sine.frequency) *
+                   (180.0f / M_PI) -
+               90.0f;
+
+  printf("angle : %f\n", hot->angle);
+
   if (hot->y > screen_height) {
     cold->state = ENEMY_RETURNING;
     cold->dive_initialized = false;
