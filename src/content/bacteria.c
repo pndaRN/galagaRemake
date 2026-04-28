@@ -73,8 +73,6 @@ void strep_dive_update(EnemyHot *hot, EnemyCold *cold, float deltaTime,
                    (180.0f / M_PI) -
                90.0f;
 
-  printf("angle : %f\n", hot->angle);
-
   if (hot->y > screen_height) {
     cold->state = ENEMY_RETURNING;
     cold->dive_initialized = false;
