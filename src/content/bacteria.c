@@ -79,6 +79,11 @@ void strep_dive_update(EnemyHot *hot, EnemyCold *cold, float deltaTime,
   }
 }
 
+void strep_return_update(EnemyHot *hot, EnemyCold *cold, float deltaTime,
+                         int screen_height, int screen_width, float player_x) {
+  (void)screen_width;
+}
+
 void staph_dive_init(EnemyHot *hot, EnemyCold *cold, int screen_height,
                      int screen_width, float player_x) {
   (void)screen_width;
