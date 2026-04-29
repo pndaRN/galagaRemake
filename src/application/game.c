@@ -17,7 +17,7 @@ static void render_game_world(const GameState *state, SDL_Renderer *renderer);
 void game_init(GameState *state, SDL_Renderer *renderer) {
   assets_init(&state->assets, renderer);
   state->player = player_create(SCREEN_WIDTH, SCREEN_HEIGHT);
-  state->level = level_init(1, SCREEN_HEIGHT, SCREEN_WIDTH);
+  state->level = level_init(8, SCREEN_HEIGHT, SCREEN_WIDTH);
 
   for (int i = 0; i < MAX_BULLETS; i++) {
     state->bullets[i].active = false;

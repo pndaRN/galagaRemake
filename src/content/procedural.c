@@ -17,7 +17,7 @@ WaveParams level_to_params(int level) {
   wp.path_type = PATH_LINE_ISH;
   wp.formation_type = FORMATION_TYPE_LINE;
   wp.formation_params.line.max_per_row = -1;
-  wp.formation_params.line.row_spacing_fraction = 1.25f;
+  wp.formation_params.line.row_spacing_fraction = 1.0f;
   return wp;
 }
 
@@ -126,7 +126,7 @@ static LineLayout line_compute_layout(FormationBounds bounds, float min_spacing,
   layout.cols = cols;
 
   float row_spacing = min_spacing * params.line.row_spacing_fraction;
-  layout.max_rows = (int)(bounds.height / row_spacing);
+  layout.max_rows = (int)(bounds.height / row_spacing) - 1;
   if (layout.max_rows < 1)
     layout.max_rows = 1;
 
@@ -164,16 +164,20 @@ static FormationResult line_generate(SDL_FPoint *positions, int count,
 
   float v_step = bounds.height / (float)(rows_used + 1);
 
-  for (int i = 0; i < placed; i++) {
-    int row = i / layout.cols;
-    int col = i % layout.cols;
+  int remainder = placed % layout.cols;
+  int partial_count = (remainder > 0) ? remainder : layout.cols;
 
-    int cols_in_row = layout.cols;
-    if (row == rows_used - 1) {
-      int remainder = placed % layout.cols;
-      if (remainder > 0)
-        cols_in_row = remainder;
+  for (int i = 0; i < placed; i++) {
+    int row, col;
+    if (i < partial_count) {
+      row = 0;
+      col = i;
+    } else {
+      row = 1 + (i - partial_count) / layout.cols;
+      col = (i - partial_count) % layout.cols;
     }
+
+    int cols_in_row = (row == 0) ? partial_count : layout.cols;
 
     float h_step = bounds.width / (float)(cols_in_row + 1);
     positions[i].x = bounds.x + (col + 1) * h_step;

@@ -106,8 +106,10 @@ void enemy_update(EnemyHot *hot, EnemyCold *cold, float deltaTime,
   case ENEMY_RETURNING: {
     const BacteriaDefinition *def = get_bacteria_def(hot->species);
     if (!cold->return_initialized) {
-      def->return_init(hot, cold, screen_height, screen_width, player_x);
-      cold->return_initialized = true;
+      if (def->return_init) {
+        def->return_init(hot, cold, screen_height, screen_width, player_x);
+        cold->return_initialized = true;
+      }
     }
     cold->t += deltaTime / 1.5f;
 

@@ -20,7 +20,7 @@ Level level_init(int level, int screen_height, int screen_width) {
       .x = screen_width * 0.05f,
       .y = screen_height * 0.1f,
       .width = screen_width * 0.9f,
-      .height = screen_height * 0.2f,
+      .height = screen_height * 0.3f,
   };
 
   WaveParams wp = level_to_params(l.level);
@@ -34,9 +34,11 @@ Level level_init(int level, int screen_height, int screen_width) {
 
   float min_spacing = 64.0f; // TODO: Compute from species pool
 
-  FormationResult result = generate_formation(l.formation_positions, wp.total_enemies, min_spacing,
-                                              wp.formation_type, wp.formation_params, l.formation_bounds);
-  (void)result; // TODO: use place/remaining when multi-shape lands
+  FormationResult result = generate_formation(
+      l.formation_positions, wp.total_enemies, min_spacing, wp.formation_type,
+      wp.formation_params, l.formation_bounds);
+  wp.total_enemies = result.placed;
+  // TODO: use result.remaining when multi-shape lands
 
   l.wave[0] = wave_init(&wp, l.p0, l.p1, l.p2, l.formation_positions,
                         screen_height, screen_width);
